@@ -2,7 +2,7 @@
 Main_Integration
 
 Top level integration:
-Szymon Ziolkowski
-Renette Ros
-Jaco Bezuidenhout
-New Thobejane
+Szymon Ziolkowski,
+Renette Ros,
+Jaco Bezuidenhout,
+Neo Thobejane
