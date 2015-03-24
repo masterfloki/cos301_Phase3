@@ -1,0 +1,11 @@
+{
+  "name": "CSDS",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+  },
+  "devDependencies": {
+    "unit.js": "^1.1.3"
+  }
+}
