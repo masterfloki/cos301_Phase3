@@ -18,8 +18,10 @@
     "node-aop": "^0.1.0",
     "nodemailer": "^1.3.2",
     "scribe-js": "^2.0.4",
-    "serve-favicon": "~2.2.0",
-    "unit.js": "^1.1.3"
+    "serve-favicon": "~2.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "unit.js": "^1.1.3",
+    "Threads":"git+https://github.com/masterfloki/cos301_Phase3.git#Threads"
+  }
 }
