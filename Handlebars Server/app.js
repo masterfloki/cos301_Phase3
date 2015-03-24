@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var spaces = require('Spaces');
 
 var routes = require('./routes/index');
 //var users = require('./routes/users');
@@ -14,7 +15,7 @@ var scribe = require('scribe-js')(); //loads Scribe
 app.use(scribe.express.logger()); //Log each request
 app.use('/logs', scribe.webPanel());
 // Database connection using mongoose
-var connection = require('./modules/Database/connect.js') //Initial connection to the database
+var connection = require('Database') //Initial connection to the database
 // React js
 //var React = require('react');
 // il8n translate
@@ -41,7 +42,7 @@ var aop = require("node-aop");// Node.js require. Use window.aop in browser
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 //**********************Include various modules from different groups here******************************
-var spaces = require('./modules/Spaces/spaces.js');
+
 console.log(spaces.createBuzzSpace());
 //**********************Include various modules from different groups here******************************
 
