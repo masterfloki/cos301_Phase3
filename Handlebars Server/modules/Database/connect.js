@@ -9,7 +9,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
     console.log("Connection to database was successful.");
 });
-
+/*
 //===================Simple testing using a schema example
 // Create schema
 var spacesSchema = mongoose.Schema({
@@ -39,4 +39,4 @@ cosTest.save(function (err, cosTest) {
 Space.find(function (err, spaces) {
     if (err) return console.error(err);
     //console.log(spaces);
-})
+})*/
