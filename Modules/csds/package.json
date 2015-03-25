@@ -1,9 +1,10 @@
 {
   "name": "csds",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {},
   "dependencies": {
+    "ldapjs": "^0.7.1"
   },
   "devDependencies": {
     "unit.js": "^1.1.3"

@@ -9,34 +9,6 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
     console.log("Connection to database was successful.");
 });
-/*
-//===================Simple testing using a schema example
-// Create schema
-var spacesSchema = mongoose.Schema({
-    name: String
-})
-// Add method to schema
-spacesSchema.methods.speak = function () {
-    var moduleName = this.name
-        ? "Module name is " + this.name
-        : "I don't have a name"
-   // console.log(moduleName);
-}
 
-// Compile schema into a model (class that constructs documents)
-var Space = mongoose.model('Spaces', spacesSchema)
-// create object of type Space
-var cosTest = new Space({ name: 'test9' });
-//cosTest.speak();
-
-// Save cosTest to the database each time server is started
-cosTest.save(function (err, cosTest) {
-    if (err) return console.error(err);
-    //cosTest.speak();
-});
-
-// Display all in Spaces model
-Space.find(function (err, spaces) {
-    if (err) return console.error(err);
-    //console.log(spaces);
-})*/
+module.exports.db = db;
+module.exports.mongoose = mongoose;
