@@ -1,6 +1,6 @@
 {
   "name": "csds",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {},
   "dependencies": {
@@ -8,5 +8,7 @@
   },
   "devDependencies": {
     "unit.js": "^1.1.3"
-  }
+  },
+  "main":"csds.js"
+
 }

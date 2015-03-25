@@ -30,6 +30,16 @@
     "scribe-js": "^2.0.4",
     "serve-favicon": "~2.2.0"
   },
+  "optionalDependencies" : {
+    "authentication": "file:..\\Modules\\Authentication",
+    "notification": "file:..\\Modules\\Notification",
+    "reporting": "file:..\\Modules\\Reporting",
+    "resources": "file:..\\Modules\\Resources",
+    "spaces": "file:..\\Modules\\Spaces",
+    "status": "file:..\\Modules\\Status",
+    "threads": "file:..\\Modules\\Threads"
+    },
+
   "devDependencies": {
     "unit.js": "^1.1.3"
   },
