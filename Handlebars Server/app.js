@@ -5,29 +5,32 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-var scribe = require('scribe-js'); // Scribe js for logging of server events. Go to http://localhost:5000/logs for more detail on logs for each day
-var app = express();
+var scribe = require('scribe-js')(); // Scribe js for logging of server events. Go to http://localhost:5000/logs for more detail on logs for each day
 
-//app.use(scribe.express.logger()); //Log each request
-//app.use('/logs', scribe.webPanel());
-
-var ldap = require('ldapjs');// ldap js
-var nodemailer = require('nodemailer');// nodemailer
 var aop = require("node-aop");// Node.js require. Use window.aop in browser
 var i18n = new (require('i18n-2'))({
  // setup some locales - other locales default to the first locale
  locales: ['en']
  });
 
-var spaces = require('spaces');
 var csds = require('csds');
 var database = require('database');
+var notify = require('notification');
+var report = require('reporting');
+var resource = require('resources');
+var spaces = require('spaces');
+
+var threads = require('threads');
 //var notification = require('../modules/Notification/NotificationA.js');
 //var authorization = require('../modules/Authentication/authentication.js');
 
 
 var connection = require('database'); //Initial connection to the database
 
+var app = express();
+
+app.use(scribe.express.logger()); //Log each request
+app.use('/logs', scribe.webPanel());
 //
 
 /*
