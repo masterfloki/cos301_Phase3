@@ -1,11 +1,15 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+//var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var scribe = require('scribe-js'); // Scribe js for logging of server events. Go to http://localhost:5000/logs for more detail on logs for each day
+var app = express();
+
+//app.use(scribe.express.logger()); //Log each request
+//app.use('/logs', scribe.webPanel());
 
 var ldap = require('ldapjs');// ldap js
 var nodemailer = require('nodemailer');// nodemailer
@@ -18,14 +22,9 @@ var i18n = new (require('i18n-2'))({
 var spaces = require('spaces');
 var csds = require('csds');
 var database = require('database');
-var notification = require('../modules/Notification/NotificationA.js');
-var authorization = require('../modules/Authentication/authentication.js');
+//var notification = require('../modules/Notification/NotificationA.js');
+//var authorization = require('../modules/Authentication/authentication.js');
 
-var app = express();
-
-
-app.use(scribe.express.logger()); //Log each request
-app.use('/logs', scribe.webPanel());
 
 var connection = require('database'); //Initial connection to the database
 
@@ -68,7 +67,7 @@ app.set('view engine', 'hbs');
 
 
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
