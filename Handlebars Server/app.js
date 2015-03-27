@@ -5,7 +5,7 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-var scribe = require('scribe-js'); // Scribe js for logging of server events. Go to http://localhost:5000/logs for more detail on logs for each day
+var scribe = require('scribe-js')(); // Scribe js for logging of server events. Go to http://localhost:5000/logs for more detail on logs for each day
 var app = express();
 
 //app.use(scribe.express.logger()); //Log each request
