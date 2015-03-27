@@ -11,8 +11,8 @@ var app = express();
 //app.use(scribe.express.logger()); //Log each request
 //app.use('/logs', scribe.webPanel());
 
-var ldap = require('ldapjs');// ldap js
-var nodemailer = require('nodemailer');// nodemailer
+//var ldap = require('ldapjs');// ldap js
+//var nodemailer = require('nodemailer');// nodemailer
 var aop = require("node-aop");// Node.js require. Use window.aop in browser
 var i18n = new (require('i18n-2'))({
  // setup some locales - other locales default to the first locale
