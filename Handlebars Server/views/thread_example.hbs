@@ -1,0 +1,20 @@
+<p>Welcome to {{title}}</p>
+<h2>Threads in this space</h2>
+{{#each this.threads}}
+<div id="Space-{{this.thread_ID}}">
+    <!-- script>
+        var t = "{{this.space_ID}}";
+        var ref = encodeURI(t);
+        //var ref= "";
+        console.log(t);
+        var a = '<a href="threads?space=' + ref + '">{{this.space_ID}} - {{this.space_Name}}</a>';
+        console.log(a);
+        document.write(a);
+        //$(this).parent.append(a);
+    </script -->
+
+    <p>Title: {{this.thread_Name}}</p>
+    <p style="background-color:grey">{{this.thread_PostContent}}</p>
+
+</div>
+{{/each}}
