@@ -1,6 +1,12 @@
-var mongoose = require('mongoose');
-
-exports = module.exports = function(settings) {
+/**
+ * @param settings
+ * @returns {{db: (Mongoose.connection), mongoose: Mongoose}}
+ */
+module.exports = function(settings) {
+    /**
+     * @type {Mongoose}
+     */
+    var mongoose = require('mongoose');
     mongoose.connect(settings.database);
 
     var db = mongoose.connection;
@@ -9,12 +15,8 @@ exports = module.exports = function(settings) {
         console.log("Connection to database was successful.");
     });
 
-    var exports = {};
-    exports.db = db;
-    exports.mongoose = mongoose;
-
-    return exports;
+    return {"db" : db, "mongoose":mongoose};
 };
 
-//exports['@singleton'] = true;
-exports['@require'] = ['settings'];
+module.exports['@singleton'] = true;
+module.exports['@require'] = ['settings'];
