@@ -1,16 +1,56 @@
-var express = require('express');
-var app = express();
-module.exports = app;
-
-
 var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var scribe = require('scribe-js')();
-
 var IoC = require('electrolyte');
-IoC.loader(IoC.node(path.resolve(__dirname + "/node_modules")) );
+/**
+ * @type {process.stdin}
+ */
+var stdin = process.stdin;
+
+stdin.resume();
+stdin.on('data',function(chunk){
+    var line = chunk.toString();
+    line.replace(/\n/,'\\n');
+    line = line.trim();
+
+    if (line === "stop") {
+        if (!app.server) {
+            console.log("Server not fully initialized.")
+        } else {
+            console.log("Server is being stopped.");
+            var database = IoC.create('database');
+            var settings = IoC.create('settings');
+            //database.db.disconnect();
+            database.mongoose.disconnect(function () {
+                console.log("Database disconnected");
+                app.server.close(function () {
+                    console.log("Server stopped");
+                   process.exit(0);
+                });
+                setTimeout(function () {
+                    console.log("Process will now be forcibly killed.");
+                    process.exit(1);
+                }, settings.killTimeout);
+
+            });
+        }
+    } else {
+        console.log('Unknown command: '+line);
+    }
+}).on('end',function(){ // called when stdin closes (via ^D)
+    console.log('stdin:closed');
+});
+
+var express = require('express');
+var app = express();
+module.exports = app;
+app.dirPath = path.resolve(__dirname);
+
+
+
+IoC.loader(IoC.node(path.resolve(app.dirPath + "/node_modules")) );
 
 /**
  * Set up the routing. All other functions will be called from the routing component.

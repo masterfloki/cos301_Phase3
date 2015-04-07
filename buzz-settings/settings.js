@@ -19,12 +19,13 @@ function normalizePort(val) {
     return false;
 }
 
-exports = module.exports = function() {
+module.exports = function() {
     return {
         "port": normalizePort(process.env.PORT || '3000'),
         "database":"mongodb://45.55.154.156:27017/Buzz",
-        "ldap" : ""
+        "ldap" : "",
+        killTimeout:500
     };
 };
 
-exports['@singleton'] = true;
+module.exports['@singleton'] = true;
