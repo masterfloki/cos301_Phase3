@@ -1,1 +1,1 @@
-node ./bin/www
+npm start

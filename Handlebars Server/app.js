@@ -1,73 +1,44 @@
 var express = require('express');
+var app = express();
+module.exports = app;
+
+
 var path = require('path');
 var favicon = require('serve-favicon');
-//var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var routes = require('./routes/index');
-var scribe = require('scribe-js')(); // Scribe js for logging of server events. Go to http://localhost:5000/logs for more detail on logs for each day
-var app = express();
+var scribe = require('scribe-js')();
 
-//app.use(scribe.express.logger()); //Log each request
-//app.use('/logs', scribe.webPanel());
+var IoC = require('electrolyte');
+IoC.loader(IoC.node("node_modules"));
 
-//var ldap = require('ldapjs');// ldap js
-//var nodemailer = require('nodemailer');// nodemailer
+/**
+ * Set up the routing. All other functions will be called from the routing component.
+ * ../routing is used since it lies in the parent directory of the default IoC loader directory
+ */
+var routes = IoC.create('../routes', app);
+
+
+app.use(scribe.express.logger()); //Log each request
+app.use('/logs', scribe.webPanel());
+
+
 var aop = require("node-aop");// Node.js require. Use window.aop in browser
 var i18n = new (require('i18n-2'))({
  // setup some locales - other locales default to the first locale
  locales: ['en']
  });
 
-var spaces = require('spaces');
-var csds = require('csds');
-var database = require('database');
-//var notification = require('../modules/Notification/NotificationA.js');
-//var authorization = require('../modules/Authentication/authentication.js');
 
 
-var connection = require('database'); //Initial connection to the database
+//var connection = IoC.create('database'); //Initial connection to the database
 
-//
-
-/*
- Test code for spaces
-
- *//*
-spaces.createBuzzSpace(2015,true,'ddd','Jan',[{id:1},{id:2}]);
-console.log(spaces.closeBuzzSpace('1','ccc'));
-console.log(spaces.assignAdministrator('2015', true, 'zzz', 'Jan', [{id:1},{id:2}], {id:3}, '1'));
-console.log(spaces.removeAdministrator('1', 'zzz', {id:2}));
-*//*
-
-/////////////////TONIA ADDED Testing of notification module
-var userAddress="tonia.michael94@gmail.com";         //Gmail username eg name before @gmail.com
-var userAddressPassword="";   //Gmail password
-var recipientAddress="u13014171@tuks.co.za";   //email address of recipient
-var senderAddress="tonia.michael94@gmail.com";  //email address of sender
-var mailSubject="jjju"; //Notification subject
-var mailMessage="juu";//Message to be sent
-notification.sendNotification(userAddress,userAddressPassword,senderAddress,recipientAddress,mailSubject,mailMessage);
-//////////
-
-*/
-
-/*
- **************TO-DO******************
- * jsreport
- * handlebars
- * broadway plugin framework
- * electrolyte
- * node-cache caching framework
- * restify REST framework
- */
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-//app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -106,4 +77,3 @@ app.use(function(err, req, res, next) {
     });
 });
 
-module.exports = app;

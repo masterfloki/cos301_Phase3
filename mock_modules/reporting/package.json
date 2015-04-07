@@ -1,0 +1,22 @@
+{
+  "name": "reporting",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "database": ">0.0.0"
+  },
+  "devDependencies": {
+    "unit.js": "^1.1.3"
+  },
+  "main": "reporting.js",
+  "_id": "reporting@0.0.2",
+  "dist": {
+    "shasum": "9f3f451c28d77982eedeee87a659b770212b538c",
+    "tarball": "https://npm.fury.io/babalela01/reporting/-/0.0.2.tgz?auth=SsRcL_nZNxT1qzQw7X66"
+  },
+  "_shasum": "9f3f451c28d77982eedeee87a659b770212b538c",
+  "_resolved": "https://npm.fury.io/babalela01/reporting/-/0.0.2.tgz?auth=SsRcL_nZNxT1qzQw7X66",
+  "_from": "reporting@>=0.0.1",
+  "readme": "ERROR: No README data found!"
+}
