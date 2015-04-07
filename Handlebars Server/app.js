@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var scribe = require('scribe-js')();
 
 var IoC = require('electrolyte');
-IoC.loader(IoC.node("node_modules"));
+IoC.loader(IoC.node(path.resolve(__dirname + "/node_modules")) );
 
 /**
  * Set up the routing. All other functions will be called from the routing component.
