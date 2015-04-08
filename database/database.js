@@ -19,4 +19,4 @@ module.exports = function(settings) {
 };
 
 module.exports['@singleton'] = true;
-module.exports['@require'] = ['settings'];
+module.exports['@require'] = ['buzz-settings'];

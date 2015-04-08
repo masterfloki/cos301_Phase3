@@ -23,7 +23,7 @@
     "resources": ">=0.0.1",
     "scribe-js": "^2.0.4",
     "serve-favicon": "~2.2.0",
-    "settings": ">=0.0.1",
+    "buzz-settings": ">=0.0.1",
     "spaces": ">=0.0.1",
     "status": ">=0.0.1",
     "threads": ">=0.0.1"

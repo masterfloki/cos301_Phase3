@@ -21,7 +21,7 @@ stdin.on('data',function(chunk){
         } else {
             console.log("Server is being stopped.");
             var database = IoC.create('database');
-            var settings = IoC.create('settings');
+            var settings = IoC.create('buzz-settings');
             //database.db.disconnect();
             database.mongoose.disconnect(function () {
                 console.log("Database disconnected");
