@@ -1,11 +1,14 @@
 {
   "name": "buzz-settings",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.3",
   "scripts": {},
   "devDependencies": {
     "unit.js": "^1.1.3"
   },
-  "main":"settings.js",
-  "contributors":[{"name":"Renette Ros"}]
+  "main": "settings.js",
+  "contributors": [
+    {
+      "name": "Renette Ros"
+    }
+  ]
 }
