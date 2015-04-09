@@ -100,4 +100,4 @@ module.exports = function(database, resources, reporting) {
 };
 
 module.exports ['@literal'] = false;
-module.exports ['@require'] = ['database', 'resources' ,'reporting'];
+module.exports ['@require'] = 'buzz-database', 'buzz-resources' ,'buzz-reporting'];
