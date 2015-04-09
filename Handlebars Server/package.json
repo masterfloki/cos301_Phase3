@@ -28,15 +28,7 @@
     "serve-favicon": "~2.2.0"
   },
   "optionalDependencies": {
-    "authentication": ">=0.0.1",
-    "csds": ">=0.0.1",
-    "database": ">=1.0.0",
-    "notification": ">=0.0.1",
-    "reporting": ">=0.0.1",
-    "spaces": ">=0.0.1",
-    "status": ">=0.0.1",
-    "threads": ">=0.0.1",
-    "resources": ">=0.0.1"
+    "database": ">=1.0.0"
   },
   "devDependencies": {
     "unit.js": "^1.1.3"
