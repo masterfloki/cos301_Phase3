@@ -56,6 +56,7 @@ IoC.loader(IoC.node(path.resolve(app.dirPath + "/node_modules")) );
  * Set up the routing. All other functions will be called from the routing component.
  * ../routing is used since it lies in the parent directory of the default IoC loader directory
  */
+var interceptor = IoC.create('./../interceptor/interceptor.js');
 var routes = IoC.create('../routes', app);
 
 
