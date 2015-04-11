@@ -1,11 +1,10 @@
 {
   "name": "buzz-database",
-  "version": "1.0.1",
-  "private": true,
+  "version": "1.0.3",
   "scripts": {},
   "description": "Module that handles the Mongoose database connection",
-  "peerDependencies": {
-    "mongoose": "^3.8.25"
+  "dependencies": {
+    "mongoose": "~3.8.25"
   },
   "devDependencies": {
     "unit.js": "^1.1.3"
