@@ -99,5 +99,5 @@ module.exports = function(database, resources, reporting) {
 
 };
 
-module.exports ['@literal'] = false;
+module.exports ['@singleton'] = true;
 module.exports ['@require'] = ['buzz-database', 'buzz-resources' ,'buzz-reporting'];

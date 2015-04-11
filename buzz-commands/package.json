@@ -1,0 +1,12 @@
+{
+  "name": "buzz-commands",
+  "main": "commands.js",
+  "version": "0.0.4",
+  "description": "Module that handles basic server commands for the buzz-system.",
+  "author": {
+    "name": "Renette Ros"
+  },
+  "dependencies": {
+    "chalk": "^1.0.0"
+  }
+}
