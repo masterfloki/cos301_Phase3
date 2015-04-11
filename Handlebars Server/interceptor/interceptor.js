@@ -1,147 +1,117 @@
 
-/*var objects = require('./objects.js');
-var authorization = require('buzz-authentication');
-var aop = require('node-aop');*/
-
-exports = module.exports = function(database, csds, aop, authorization, threads, spaces, notifications, status, resources, settings)
+exports = module.exports = function(database, csds, threads, spaces, notifications, status, resources, reporting, authorization, settings)
 {
+    var aop = require('node-aop');
+    var listOfInterceptorsForAuth = [];
+    var listOfInterceptorsForNotify = [];
+    var listOfServicesForAuth = [];
+    var listOfServicesForNotify = [];
 
-    function checkIfAuthorized(domain, service)
+    listOfServicesForNotify.push({domain:threads, service:'submitPost', action: 'submitPost'});
+    listOfServicesForNotify.push({domain:threads, service:'moveThread', action: 'moveThread'});
+    listOfServicesForNotify.push({domain:threads, service:'closeThread', action: 'closeThread'});
+    listOfServicesForNotify.push({domain:threads, service:'hideThread', action: 'closeThread'});
+    listOfServicesForNotify.push({domain:status, service:'assignAppraisalToPost', action: 'assignAppraisalToPost'});
+
+    listOfServicesForAuth.push({domain:threads, service:'submitPost'});
+    listOfServicesForAuth.push({domain:threads, service:'moveThread'});
+    listOfServicesForAuth.push({domain:threads, service:'closeThread'});
+    listOfServicesForAuth.push({domain:threads, service:'hideThread'});
+    listOfServicesForAuth.push({domain:resources, service:'uploadResource'});
+    listOfServicesForAuth.push({domain:resources, service:'removeResource'});
+    listOfServicesForAuth.push({domain:resources, service:'addResourceType'});
+    listOfServicesForAuth.push({domain:resources, service:'modifyResourceType'});
+    listOfServicesForAuth.push({domain:resources, service:'submitPost'});
+    listOfServicesForAuth.push({domain:status, service:'assignAppraisalToPost'});
+    listOfServicesForAuth.push({domain:status, service:'setStatusCalculator'});
+    listOfServicesForAuth.push({domain:status, service:'createAppraisalType'});
+    listOfServicesForAuth.push({domain:status, service:'removeAppraisalType'});
+    listOfServicesForAuth.push({domain:status, service:'assignAppraisalTypeToBuzzSpace'});
+    listOfServicesForAuth.push({domain:spaces, service:'closeBuzzSpace'});
+    listOfServicesForAuth.push({domain:spaces, service:'createBuzzSpace'});
+    listOfServicesForAuth.push({domain:spaces, service:'assignAdministrator'});
+    listOfServicesForAuth.push({domain:spaces, service:'removeAdministrator'});
+    listOfServicesForAuth.push({domain:authorization, service:'addAuthorizationRestriction'});
+    listOfServicesForAuth.push({domain:authorization, service:'editAuthorizationRestriction'});
+    listOfServicesForAuth.push({domain:authorization, service:'removeAuthorizationRestriction'});
+
+    function init()
     {
-        var serviceIdentifier = new authorization.please(settings, database, csds).ServiceIdentifier(domain, service);
-        var isAuthorisedRequest = new authorization.please(settings, database, csds).isAuthorizedRequest('u12118282', serviceIdentifier);
-        var isAuthorizedResult = authorization.please(settings, database, csds).isAuthorized(isAuthorisedRequest);
+        for(var i = 0; i < listOfServicesForAuth.length; i++)
+        {
+            var domain = listOfServicesForAuth[i].domain;
+            var service = listOfServicesForAuth[i].service;
+            var interceptorName = domain + service;
+            listOfInterceptorsForAuth[interceptorName] = aop.before(domain, service, function(){
+                checkIfAuthorizedUser(domain, service);
+            });
+        }
 
+        for(var i = 0; i < listOfServicesForNotify.length; i++)
+        {
+            var domain = listOfServicesForNotify[i].domain;
+            var service = listOfServicesForNotify[i].service;
+            var action = listOfServicesForNotify[i].action;
+            var interceptorName = domain + service;
+            listOfInterceptorsForNotify[interceptorName] = aop.after(domain, service,function(threadId){
+                notifyUsersAbout(action, threadId);
+            });
+        }
+
+
+
+    };
+    init();
+
+    function checkIfAuthorizedUser(domain, service)
+    {
+        var serviceIdentifier = new authorization.ServiceIdentifier(domain, service);
+        var isAuthorisedRequest = new authorization.isAuthorizedRequest('u12118282', serviceIdentifier);
+        var isAuthorizedResult = new authorization.Authorization.isAuthorized(isAuthorisedRequest);//talk to ruth thi needs to be changed to just authorization.isAuthorized not 2xauthorization
         if(isAuthorizedResult.isAuthorized === true)
         {
-            console.log("Has authroization");
+            console.log("Authorized");
         }
         else
         {
-            console.log("Unathorized action");
+            console.log("Not Authorized");
             throw {'status':500,'message':'Unauthorized Access Restricted'};
         }
     };
 
+    function notifyUsersAbout(action, threadId)
+    {
+        if(action === 'moveThread')
+        {
+            notifications.notifyMovedThread(threadId);
+        }
+        else if(action === 'submitPost')
+        {
+            notifications.notifyNewPost(threadId);
+        }
+        else if(action === 'closeThread')
+        {
+
+        }
+        else if(action === 'hideThread')
+        {
+            notifications.notifyDeletedThread(threadId);
+        }
+        else if(action === 'assignAppraisalToPost')
+        {
+            notifications.appraisalNotify(threadId);
+        }
+        //this isnt final still need to get from notifications how their stuff works :/
+    };
 
 
-    /**Interceptors for the threads module**/
-    aop.before(threads, 'submitPost',function(){
-        checkIfAuthorized('thread','submitPost');
-    });
-    aop.after(threads, 'submitPost',function(){
-        //notifications
-    });
-
-    aop.before(threads,'moveThread',function(){
-        checkIfAuthorized('thread','moveThread');
-    });
-    aop.after(threads,'moveThread',function(){
-        //notification
-    });
-
-    aop.before(threads, 'closeThread', function(){
-        checkIfAuthorized('thread','closeThread');
-    });
-    aop.after(threads,'closeThread',function(){
-        //notification
-    });
-
-    aop.before(threads, 'hideThread', function(){
-        checkIfAuthorized('thread','hideThread');
-    });
-    aop.after(threads,'hideThread',function(){
-        //notification, Mrs Vreda said not to notify about deleting threads???
-    });
-
-    /**Interceptors for the resource module**/
-    aop.before(resources, 'uploadResource',function(){
-        checkIfAuthorized('resources','uploadResource');
-    });
-
-    aop.before(resources, 'removeResource',function(){
-        checkIfAuthorized('resources','removeResource');
-    });
-
-    aop.before(resources,'addResourceType',function(){
-        checkIfAuthorized('resources','addResourceType');
-    });
-
-    aop.before(resources, 'removeResourceType', function(){
-        checkIfAuthorized('resources','removeResourceType');
-    });
-
-    aop.before(resources, 'modifyResourceType', function(){
-        checkIfAuthorized('resources','modifyResourceType');
-    });
-
-    /**Interceptors for the status module**/
-    aop.before(status, 'assignAppraisalToPost',function(){//do we need authorization to assign an appraisal to a post?
-        checkIfAuthorized('status', 'assignAppraisalToPost');
-    });
-    aop.after(status,'assignAppraisalToPost',function(){
-        //notification
-    });
-
-    aop.before(status, 'uploadResource', function(){
-        checkIfAuthorized('status','uploadResource');
-    });
-
-    aop.before(status, 'removeResource', function(){
-        checkIfAuthorized('status','removeResource');
-    });
-
-    aop.before(status, 'addResourceType', function(){
-        checkIfAuthorized('status','addResourceType');
-    });
-
-    aop.before(status, 'removeResourceType', function(){
-        checkIfAuthorized('status','removeResourceType');
-    });
-
-    aop.before(status, 'modifyResourceType', function(){
-        checkIfAuthorized('status','modifyResourceType');
-    });
-
-    /**Interceptors for the spaces module**/
-    aop.before(spaces, 'closeBuzzSpace', function(){
-        checkIfAuthorized('spaces','closeBuzzSpace');
-    });
-
-    aop.before(spaces, 'createBuzzSpace', function(){
-        checkIfAuthorized('spaces','createBuzzSpace');
-    });
-
-    aop.before(spaces, 'addResourceType', function(){
-        checkIfAuthorized('spaces','addResourceType');
-    });
-
-    aop.before(spaces, 'assignAdministrator', function(){
-        checkIfAuthorized('spaces','assignAdministrator');
-    });
-
-    aop.before(spaces, 'removeAdministrator', function(){
-        checkIfAuthorized('spaces','removeAdministrator');
-    });
-
-    /**Interceptor for authorization module**/
-    aop.before(authorization, 'addAuthorizationRestriction', function(){
-        checkIfAuthorized('authorization','addAuthorizationRestriction');
-    });
-
-    aop.before(authorization, 'editAuthorizationRestriction', function(){
-        checkIfAuthorized('authorization','editAuthorizationRestriction');
-    });
-
-    aop.before(authorization, 'removeAuthorizationRestrication', function(){
-        checkIfAuthorized('authorization','removeAuthorizationRestrication');
-    });
 
 
 
 };
 
 exports['@literal'] = false;
-exports['@require'] = ['buzz-database', 'buzz-csds', 'node-aop', 'buzz-authentication', 'buzz-threads', 'buzz-spaces', 'buzz-notification', 'buzz-status', 'buzz-resources'];
+exports['@require'] = ['buzz-database', 'buzz-csds', 'buzz-threads', 'buzz-spaces', 'buzz-notification', 'buzz-status', 'buzz-resources','buzz-reporting', 'buzz-authentication'];
+
 ///**Mock authorization, doesnt do much just some randomness when it comes to authorizing stuff**/
 
