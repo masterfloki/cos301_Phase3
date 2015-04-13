@@ -1,0 +1,125 @@
+<html>
+<head>
+    <title>Notify Page</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/css/bootstrap.css" rel="stylesheet">
+    <script src="vendor/js/bootstrap.min.js"></script>
+    <script>
+        //  var test = require('./NotificationA');
+        function reg(){
+            /*    var jsonObj = {
+                    type : 'follow_Thread',
+                    threadID: '1',
+                    studentID: 'u34567890'
+                }
+
+               var result = test.notifyRegistration(jsonObj);*/
+
+            //(if(document.getElementById("RegN").checked))
+            //{ alert("here");}
+            return true;
+        }
+        function dereg(){
+            /* var jsonOBj = {
+                 type: "deregister_Thread",
+                 threadID: '1',
+                 studentID: 'u34567890'
+             };
+             var result = test.notifyDeregistration(jsonOBj);*/
+            return true;
+        }
+    </script>
+    <style>
+        .styleC{
+            align-items: center;
+            align-content: center;
+            border-top-color: #030201;
+            border-left-color: black;
+            border-right-color: black;
+            border-bottom-color: #030201;
+            border-style: solid;
+        }
+    </style>
+</head>
+
+<body>
+
+<form action="/submitNotifyOptions" method="POST">
+    <!--div class="input-group-btn">
+        <button type="button" id="subNotify" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#" onclick="return reg();">Register for notifications </a></li>
+            <li><a href="#" onclick="return dereg();">Deregister for notifications</a></li>
+        </ul>
+    </div-->
+
+
+    <ul style="list-style-type: none;">
+        <li>
+            <td><strong>Notifications options regarding this thread:</strong></td>
+        </li>
+        <br/>
+        <li>
+            <td>New thread created?</td>
+            <td>
+                <input type="text" id="new" placeholder = "Y?" name="new">
+            </td>
+        </li>
+        <li>
+            <td>Deleted thread?</td>
+            <td>
+                <input type="text" id="del" placeholder = "Y?"name="del">
+            </td>
+        </li>
+        <li>
+            <td>Thread moved?</td>
+            <td>
+                <input type="text" id="moved" placeholder = "Y?"name="moved">
+            </td>
+        </li>
+        <li>
+            <td>Register for appraisal?</td>
+            <td>
+                <input type="text" id="appReg" placeholder = "Y?"name="appReg">
+            </td>
+        </li>
+        <li>
+            <td>Deregister for appraisal?</td>
+            <td>
+                <input type="text" id="appDereg" placeholder = "Y?"name="appDereg">
+            </td>
+        </li>
+        <li>
+            <td>
+                <input type="Submit" placeholder = "Y/N?"value="Submit">
+            </td>
+            <td>{{message}}</td>
+        </li>
+        <div class="styleC">
+            <h1>Thread: Wifi in the IT building </h1>
+            <a href="/notify">Register/Deregister Notification</a>
+            <br><br><br><br><br>
+        </div>
+        <div class="styleC">
+            <h3>comment 1: I agree</h3>
+            <a href="/notify">Register/Deregister Notification</a>
+            <br><br><br>
+        </div>
+        <div class="styleC">
+            <h3>comment 2: I disagree</h3>
+            <a href="/notify">Register/Deregister Notification</a>
+            <br><br><br>
+        </div>
+    </ul>
+    <div>
+        {{result}}
+    </div>
+
+</form>
+
+<a href="/createSpace">Create Buzz Space</a>
+<a href="/closeSpace">Close Buzz Space</a>
+
+</body>
+</html>

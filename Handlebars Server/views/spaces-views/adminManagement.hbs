@@ -1,0 +1,78 @@
+	<head>
+		<title>temp user interface</title>
+		<style>
+			*
+			{
+				margin : 0px;
+				padding : 0px;
+			}
+			li
+			{
+				padding-top:5px
+			}
+		</style>
+	</head>	
+		<form id = "addForm" action="/submitAAM" method="post">
+			<ul style="list-style-type: none;">
+				<li>
+					<td><strong>Add/Remove admin</strong></td>
+				</li>
+				<br/>
+				<li>
+					<td>User ID</td>
+					<td>
+						<input type="textbox" id="AAid" name="AAid">
+					</td>
+							
+					
+				</li>				
+				<li>
+					<td> Assign Admin</td>
+				<li>
+					<td>Module ID:</td>
+					<td>
+						<input type="textbox" id="Aadmin" name="Aadmin"  >
+					</td>
+				</li>
+
+				<li>
+					<td>
+						<input type="submit" value="Add Admin">
+					</td>
+					<td>{{message}}</td>		
+				</li>				
+			</ul>
+
+
+	</form>		
+	<br/>
+	<form id = "addForm" action="/submitRAM" method="post">
+			<ul style="list-style-type: none;">
+
+				<li>
+					<td> Remove Admin</td>
+				</li>
+				
+				<li>
+					<td>User ID</td>
+					<td>
+						<input type="textbox" id="RSid" name="RSid">
+					</td>
+				</li>
+				
+				<li>
+					<td>Module ID:</td>
+					<td>
+						<input type="textbox" id="RAid" name="RAid">
+					</td>
+							
+				</li>
+				<li>
+					<td>
+						<input type="submit" value="Remove Admin" >
+					</td>
+					<td>{{message}}</td>
+				</li>
+			</ul>
+		</form>		
+				

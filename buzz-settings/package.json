@@ -1,6 +1,6 @@
 {
   "name": "buzz-settings",
-  "version": "0.0.3",
+  "version": "0.1.1",
   "scripts": {},
   "devDependencies": {
     "unit.js": "^1.1.3"

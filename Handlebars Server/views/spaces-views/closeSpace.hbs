@@ -1,0 +1,45 @@
+	<head>
+		<title>temp user interface</title>
+		<style>
+			*
+			{
+				margin : 0px;
+				padding : 0px;
+			}
+			li
+			{
+				padding-top:5px
+			}
+		</style>
+	</head>
+	<div>
+		<form id = "addForm" action="/submitRS" method="post">
+			<ul style="list-style-type: none;">
+				<li>
+					<td><strong>Close Buzz Space</strong></td>
+				</li>	
+				<br/>
+				<li>
+					<td>Module ID</td>
+					<td>
+						<input type="textbox" id="RSmodule" name="RSmodule">
+					</td>
+				</li>
+				<li>
+					<td>User ID</td>
+					<td>
+						<input type="textbox" id="RSid" name="RSid">
+					</td>
+				</li>				
+				<li>
+					<td>
+						<input type="Submit" value="Close Space">
+					</td>
+					<td>{{message}}</td>					
+				</li>					
+
+
+			</ul>
+			</form>
+		<div>
+

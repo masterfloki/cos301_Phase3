@@ -1,0 +1,24 @@
+<h1>File Upload Constraints</h1>
+<h2>Existing Constraints</h2>
+<div class="container">
+    <table>
+        <tr><td>Mime Type</td><td>Size Limit</td></tr>
+        {{#each this.constraints}}
+            <form method="Post" action="removeConstraint">
+                <input type="hidden" name="_id" value="{{this._id}}">
+                {{this.mime_type}}  {{this.size_limit}} MB <input type="submit" value="Remove">
+            </form>
+        {{/each}}
+    </table>
+</div>
+
+<h2>Add new Constraint</h2>
+<form id="addForm" action="submitConstraint" method="post">
+    <label for="mime_type">Mime Type</label>
+    <input id="mime_type" type="text" name="mime_type">
+
+    <label for="file_size">File Size Limit</label>
+    <input id="file_size" type="text" name="size_limit">
+
+    <input type="submit" class="btn btn-default" name="add" value="Add">
+</form>

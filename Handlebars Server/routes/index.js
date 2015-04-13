@@ -1,12 +1,19 @@
 /**
- * @param database
- * @param resources
- * @param reporting
- * @returns {Router}
+ *
+ * @param database {BuzzDatabase}
+ * @param resources {resources}
+ * @param reporting {reporting}
+ * @param status {status}
+ * @param threads {threads}
+ * @param authentication {authentication}
+ * @param csds {csds}
+ * @param spaces {spaces}
+ * @param notification {notification}
+ * @returns {exports}
  */
-module.exports = function(database, resources, reporting) {
+module.exports = function(database, resources, reporting, status, threads, authentication, csds, spaces, notification) {
     var express = require('express');
-    var router = express.Router();
+
     var mongoose = database.mongoose;
 
     function getProfile(id) {
@@ -65,6 +72,11 @@ module.exports = function(database, resources, reporting) {
         });
     }
 
+    /**
+     * @type {exports}
+     */
+    var router = express.Router();
+
     /* GET home page. */
     router.get('/', function (req, res, next) {
     //Pass to page
@@ -95,9 +107,23 @@ module.exports = function(database, resources, reporting) {
         res.render('test', getProfile(req.query.id));
     });
 
+
+    /******** Content Routing ****************/
+
+    var contentRouter = require('./content');
+    router = contentRouter(router, resources, reporting, status, threads);
+
+    /******** Infrastructure Routing **********/
+
+    var infrastructure = require('./infrastructure');
+    router = infrastructure(router, database, authentication, csds, spaces, notification);
+
+
    return  router;
 
 };
 
 module.exports ['@singleton'] = true;
-module.exports ['@require'] = ['buzz-database', 'buzz-resources' ,'buzz-reporting'];
+module.exports ['@require'] = ['buzz-database',
+    'buzz-resources' ,'buzz-reporting', 'buzz-status', 'buzz-threads',
+    'buzz-authentication', 'buzz-csds', 'buzz-spaces', 'buzz-notification'];
