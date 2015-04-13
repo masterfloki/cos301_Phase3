@@ -34,18 +34,10 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
     listOfServicesForAuth.push({domain:authorization, service:'addAuthorizationRestriction'});
     listOfServicesForAuth.push({domain:authorization, service:'editAuthorizationRestriction'});
     listOfServicesForAuth.push({domain:authorization, service:'removeAuthorizationRestriction'});
+    //listOfServicesForAuth.push({domain:reporting, service:'testFunction'});
 
     function init()
     {
-        for(var i = 0; i < listOfServicesForAuth.length; i++)
-        {
-            var domain = listOfServicesForAuth[i].domain;
-            var service = listOfServicesForAuth[i].service;
-            var interceptorName = domain + service;
-            listOfInterceptorsForAuth[interceptorName] = aop.before(domain, service, function(){
-                checkIfAuthorizedUser(domain, service);
-            });
-        }
 
         for(var i = 0; i < listOfServicesForNotify.length; i++)
         {
@@ -53,34 +45,44 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
             var service = listOfServicesForNotify[i].service;
             var action = listOfServicesForNotify[i].action;
             var interceptorName = domain + service;
-            listOfInterceptorsForNotify[interceptorName] = aop.after(domain, service,function(threadId){
-                notifyUsersAbout(action, threadId);
+            listOfInterceptorsForNotify[interceptorName] = aop.before(domain, service,function(objectIntercepted){
+                notifyUsersAbout(action, objectIntercepted);
             });
         }
+        //note notifications are done on aop.before as it allows me to get the threadId
 
-
-
+        for(var i = 0; i < listOfServicesForAuth.length; i++)
+        {
+            var domain = listOfServicesForAuth[i].domain;
+            var service = listOfServicesForAuth[i].service;
+            var interceptorName = domain + service;
+            listOfInterceptorsForAuth[interceptorName] = aop.before(domain, service, function(objectIntercepted){
+                checkIfAuthorizedUser(domain, service, objectIntercepted);
+            });
+        }
     };
     init();
 
     function checkIfAuthorizedUser(domain, service)
     {
+        var userId = objectIntercepted.userId;//chance it might break if coded on userID and not userId;
         var serviceIdentifier = new authorization.ServiceIdentifier(domain, service);
-        var isAuthorisedRequest = new authorization.isAuthorizedRequest('u12118282', serviceIdentifier);
+        var isAuthorisedRequest = new authorization.isAuthorizedRequest(userId, serviceIdentifier);
         var isAuthorizedResult = new authorization.Authorization.isAuthorized(isAuthorisedRequest);//talk to ruth thi needs to be changed to just authorization.isAuthorized not 2xauthorization
         if(isAuthorizedResult.isAuthorized === true)
         {
-            console.log("Authorized");
+            //console.log("Authorized");
         }
         else
         {
-            console.log("Not Authorized");
+            //console.log("Not Authorized");
             throw {'status':500,'message':'Unauthorized Access Restricted'};
         }
     };
 
-    function notifyUsersAbout(action, threadId)
+    function notifyUsersAbout(action, objectIntercepted)
     {
+        var threadId = {threadId : objectIntercepted.threadId};
         if(action === 'moveThread')
         {
             notifications.notifyMovedThread(threadId);
@@ -101,13 +103,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
         {
             notifications.appraisalNotify(threadId);
         }
-        //this isnt final still need to get from notifications how their stuff works :/
     };
-
-
-
-
-
 };
 
 exports['@literal'] = false;

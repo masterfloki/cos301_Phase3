@@ -1,5 +1,5 @@
 
-
+/*
 var notAuthorized = {
     'status':7331,
     'message':'You do not have the necessary authorisation to access this service.'
@@ -21,7 +21,7 @@ var threads = {
 };
 
 /**Mock status so i can make interceptors onto status**/
-var status = {
+/*var status = {
     assignAppraisalToPost : function(){
         console.log("assigning apraisal to post");
     },
@@ -103,4 +103,5 @@ module.exports.status = status;
 module.exports.threads = threads;
 module.exports.resources = resources;
 module.exports.spaces = spaces;
-module.exports.authorization = authorization;
+module.exports.authorization = authorization;*/
+
