@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test" : "./node_modules/mocha/bin/mocha"
+
   },
   "dependencies": {
     "buzz-authentication": "^1.0.0",
@@ -35,7 +37,8 @@
   "devDependencies": {
     "unit.js": "^1.1.3",
     "should": "~5.2.0",
-    "supertest": "~0.15.0"
+    "supertest": "~0.15.0",
+    "mocha": "~2.2.4"
   },
   "publishConfig": {
     "registry": "http://45.55.188.104:4873"

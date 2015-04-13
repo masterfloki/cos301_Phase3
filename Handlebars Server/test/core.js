@@ -9,6 +9,4 @@ var request = require('supertest')
         .get('/')
         .expect(200, done);
     })
-  })
-
- })
+  });
