@@ -19,7 +19,7 @@ IoC.loader(IoC.node( __dirname + "/node_modules"));
  */
 app.interceptor = IoC.create('../interceptor/interceptor.js', app);
 app.routes = IoC.create('../routes', app);
-//app.settings = IoC.create('buzz-settings', app);
+app.settings.port = IoC.create('buzz-settings', app).port;
 app.commands = IoC.create('buzz-commands', app);
 
 app.use(scribe.express.logger()); //Log each request

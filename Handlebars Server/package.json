@@ -14,7 +14,7 @@
     "buzz-resources": "^1.0.0",
     "buzz-settings": "0.x.x",
     "buzz-spaces": "^1.0.0",
-    "buzz-status": ">=0.1.0",
+    "buzz-status": "^1.0.0",
     "buzz-threads": ">=0.0.1",
     "buzz-commands":"^0.x.x",
     "body-parser": "~1.12.0",
