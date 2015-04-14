@@ -63,46 +63,61 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
     };
     init();
 
-    function checkIfAuthorizedUser(domain, service)
+    function checkIfAuthorizedUser(domain, service, objectIntercepted)
     {
-        var userId = objectIntercepted.userId;//chance it might break if coded on userID and not userId;
-        var serviceIdentifier = new authorization.ServiceIdentifier(domain, service);
-        var isAuthorisedRequest = new authorization.isAuthorizedRequest(userId, serviceIdentifier);
-        var isAuthorizedResult = new authorization.Authorization.isAuthorized(isAuthorisedRequest);//talk to ruth thi needs to be changed to just authorization.isAuthorized not 2xauthorization
-        if(isAuthorizedResult.isAuthorized === true)
+        if(objectIntercepted.userId === undefined)
         {
-            //console.log("Authorized");
+            console.log("could not authorize")
         }
         else
         {
-            //console.log("Not Authorized");
-            throw {'status':500,'message':'Unauthorized Access Restricted'};
+            var userId = objectIntercepted.userId;
+            var serviceIdentifier = new authorization.ServiceIdentifier(domain, service);
+            var isAuthorisedRequest = new authorization.isAuthorizedRequest(userId, serviceIdentifier);
+            var isAuthorizedResult = new authorization.Authorization.isAuthorized(isAuthorisedRequest);//talk to ruth thi needs to be changed to just authorization.isAuthorized not 2xauthorization
+            if(isAuthorizedResult.isAuthorized === true)
+            {
+                //console.log("Authorized");
+            }
+            else
+            {
+                //console.log("Not Authorized");
+                throw {'status':500,'message':'Unauthorized Access Restricted'};
+            }
         }
     };
 
     function notifyUsersAbout(action, objectIntercepted)
     {
-        var threadId = {threadId : objectIntercepted.threadId};
-        if(action === 'moveThread')
+        if(objectIntercepted.threadId === undefined)
         {
-            notifications.notifyMovedThread(threadId);
+            console.log("could not notify")
         }
-        else if(action === 'submitPost')
+        else
         {
-            notifications.notifyNewPost(threadId);
-        }
-        else if(action === 'closeThread')
-        {
+            var threadId = {threadId : objectIntercepted.threadId};
+            if(action === 'moveThread')
+            {
+                notifications.notifyMovedThread(threadId);
+            }
+            else if(action === 'submitPost')
+            {
+                notifications.notifyNewPost(threadId);
+            }
+            else if(action === 'closeThread')
+            {
 
+            }
+            else if(action === 'hideThread')
+            {
+                notifications.notifyDeletedThread(threadId);
+            }
+            else if(action === 'assignAppraisalToPost')
+            {
+                notifications.appraisalNotify(threadId);
+            }
         }
-        else if(action === 'hideThread')
-        {
-            notifications.notifyDeletedThread(threadId);
-        }
-        else if(action === 'assignAppraisalToPost')
-        {
-            notifications.appraisalNotify(threadId);
-        }
+
     };
 };
 
