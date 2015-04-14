@@ -17,7 +17,20 @@ function normalizePort(val) {
     return false;
 }
 
+/**
+ * @typedef {{address, password}} EmailSettings
+ * @typedef {{base, url}} CsdsSettings
+ * @typedef {{subjectRegistration, messageRegistration, subjectDeregistration, messageDeregistration, subjectNewPost, messageNewPost, subjectDeletedThread,
+    messageDeletedThread, subjectMovedThread, messageMovedThread, subjectNewAppraisal, messageNewAppraisal }} NotificationSettings
+ *
+ * @typedef {{port : number|String, database : String, killTimeout : Number, email : EmailSettings, csds : CsdsSettings, notification: NotificationSettings}} BuzzSettings
+ *
+ * @returns {BuzzSettings}
+ */
 module.exports = function() {
+    /**
+     * @type {BuzzSettings|exports}
+     */
     var settings = require("./settings.json");
     settings.port = normalizePort(settings.port);
     return settings;

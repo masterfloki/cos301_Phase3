@@ -10,7 +10,7 @@
     "base": "ou=Computer Science,o=University of Pretoria,c=ZA",
     "url": "ldap://reaper.up.ac.za"
   },
-  "notifications": {
+  "notification": {
     "subjectRegistration": "Successful registration.",
     "messageRegistration": "You have been registered to a thread.",
     "subjectDeregistration": "Successful registration.",
