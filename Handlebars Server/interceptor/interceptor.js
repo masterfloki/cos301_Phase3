@@ -43,6 +43,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
             var service = listOfServicesForAuth[i].service;
             var interceptorName = domain + service;
             listOfInterceptorsForAuth[interceptorName] = aop.before(domain, service, function(){
+                //TODO get session and logged in user
                 checkIfAuthorizedUser(domain, service);
             });
         }
@@ -54,6 +55,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
             var action = listOfServicesForNotify[i].action;
             var interceptorName = domain + service;
             listOfInterceptorsForNotify[interceptorName] = aop.after(domain, service,function(threadId){
+                //TODO get session and logged in user
                 notifyUsersAbout(action, threadId);
             });
         }
@@ -81,6 +83,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
 
     function notifyUsersAbout(action, threadId)
     {
+        //TODO Maybe uee switch instead? its much more readable.
         if(action === 'moveThread')
         {
             notifications.notifyMovedThread(threadId);
@@ -110,7 +113,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
 
 };
 
-exports['@literal'] = false;
+exports['@singleton'] = true;
 exports['@require'] = ['buzz-database', 'buzz-csds', 'buzz-threads', 'buzz-spaces', 'buzz-notification', 'buzz-status', 'buzz-resources','buzz-reporting', 'buzz-authentication'];
 
 ///**Mock authorization, doesnt do much just some randomness when it comes to authorizing stuff**/
