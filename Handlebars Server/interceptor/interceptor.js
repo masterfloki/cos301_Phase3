@@ -96,25 +96,24 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
         else
         {
             var threadId = {threadId : objectIntercepted.threadId};
-            if(action === 'moveThread')
-            {
-                notifications.notifyMovedThread(threadId);
-            }
-            else if(action === 'submitPost')
-            {
-                notifications.notifyNewPost(threadId);
-            }
-            else if(action === 'closeThread')
-            {
-
-            }
-            else if(action === 'hideThread')
-            {
-                notifications.notifyDeletedThread(threadId);
-            }
-            else if(action === 'assignAppraisalToPost')
-            {
-                notifications.appraisalNotify(threadId);
+            switch(action) {
+                case 'moveThread':
+                    notifications.notifyMovedThread(threadId);
+                    break;
+                case 'submitPost':
+                    notifications.notifyNewPost(threadId);
+                    break;
+                case 'closeThread':
+                    notifications.notifyDeletedThread(threadId);//notifications say use this for closed threads
+                    break;
+                case 'hideThread':
+                    notifications.notifyDeletedThread(threadId);
+                    break;
+                case 'assignAppraisalToPost':
+                    notifications.appraisalNotify(threadId);
+                    break;
+                default:
+                    break;
             }
         }
 
