@@ -41,9 +41,11 @@ module.exports = function(router, resources, reporting, status, threads){
             }
         });
     });
+
+    //TODO Handle this with Ajax
     router.post('/submitConstraint', urlencodedparser, function(req, res, next){
 
-        resources.addConstraint(req.body.mime_type, req.body.size_limit, function(success){
+        resources.addConstraint(req.body["mime-type"], req.body["size-limit"]*req.body['size-unit'], function(success){
             if (!success){
 
                 res.render('error', {
@@ -51,66 +53,23 @@ module.exports = function(router, resources, reporting, status, threads){
                     error : {}
                 });
             } else {
-
-                resources.getConstraints(function(err, results){
-
-                    if (err){
-
-                        res.render('error', {
-                            message : "No data could be retrieved",
-                            error : err
-                        });
-                    } else {
-
-                        results.forEach(function(con){ // set unit to MB
-                            con.size_limit = (con.size_limit/(1024*1024)).toFixed(3);
-                        });
-
-                        var object = {};
-                        object.title = "Constraint Management";
-                        object.constraints = results;
-                        res.render('resources-views/manageConstraints', object);
-                    }
-                });
+                res.redirect("/file-constraints");
             }
         });
     });
 
     router.post('/removeConstraint', urlencodedparser, function(req, res, next){
-
         resources.removeConstraint(req.body._id, function(success){
             if (!success){
-
                 res.render('error', {
                     message : "Constraint could not be removed.",
                     error : {}
                 });
             } else {
-
-                resources.getConstraints(function(err, results){
-
-                    if (err){
-
-                        res.render('error', {
-                            message : "No data could be retrieved",
-                            error : err
-                        });
-                    } else {
-
-                        results.forEach(function(con){ // set unit to MB
-                            con.size_limit = (con.size_limit/(1024*1024)).toFixed(3);
-                        });
-
-                        var object = {};
-                        object.title = "Constraint Management";
-                        object.constraints = results;
-                        res.render('resources-views/manageConstraints', object);
-                    }
-                });
+                res.redirect("/file-constraints");
             }
         });
     });
-
 
     router.get('/manageResources', function(req, res, next){
         res.render('blank');

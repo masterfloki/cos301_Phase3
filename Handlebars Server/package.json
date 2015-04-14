@@ -29,7 +29,7 @@
     "serve-favicon": "~2.2.0"
   },
   "optionalDependencies": {
-    "database": ">=1.0.0"
+
   },
   "devDependencies": {
     "unit.js": "^1.1.3"

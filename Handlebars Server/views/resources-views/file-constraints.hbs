@@ -1,24 +1,39 @@
-<h1>File Upload Constraints</h1>
+<h1>Resource Constraints</h1>
 <h2>Existing Constraints</h2>
 <div class="container">
-    <table>
-        <tr><td>Mime Type</td><td>Size Limit</td></tr>
+    <table class="table" id="resource-constraints">
+        <thead><tr><th>#</th><th>Mime Type</th><th>Size Limit</th></tr></thead>
+        <tbody>
         {{#each this.constraints}}
-            <form method="Post" action="removeConstraint">
-                <input type="hidden" name="_id" value="{{this._id}}">
-                {{this.mime_type}}  {{this.size_limit}} MB <input type="submit" value="Remove">
-            </form>
+            <tr>
+                <td><script>document.write( {{@index}} + 1)</script></td>
+                <td>{{this.mime_type}}</td>
+                <td>{{this.size_limit}} MB </td>
+                <td><form method="Post" action="removeConstraint">
+                    <input type="hidden" name="_id" value="{{this._id}}">
+                    <input type="submit" value="Remove">
+                </form></td></tr>
         {{/each}}
+        </tbody>
     </table>
 </div>
 
 <h2>Add new Constraint</h2>
 <form id="addForm" action="submitConstraint" method="post">
-    <label for="mime_type">Mime Type</label>
-    <input id="mime_type" type="text" name="mime_type">
-
-    <label for="file_size">File Size Limit</label>
-    <input id="file_size" type="text" name="size_limit">
-
-    <input type="submit" class="btn btn-default" name="add" value="Add">
+    <div class="form-group">
+        <label for="mime-type" >Mime Type</label>
+        <input id="mime-type" required type="text" name="mime-type" class="form-control">
+    </div>
+    <div class="form-group" >
+        <label for="size-limit" >File Size Limit</label>
+        <div class="form-inline">
+            <input id="size-limit"  required type="number" name="size-limit" class="form-control" >
+            <select name="size-unit" id="size-unit">
+                <option value="1">Bytes</option>
+                <option value="1024">KB</option>
+                <option value="1048576">MB</option>
+            </select>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" name="add" value="Add">
 </form>
