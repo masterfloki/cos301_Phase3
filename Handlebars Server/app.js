@@ -13,6 +13,21 @@ global.app = app;
 
 IoC.loader(IoC.node( __dirname + "/node_modules"));
 
+var session = require('express-session');
+var sessionStore = require('session-file-store')(session);
+var secretString = (Math.random() + 1).toString(36).substring(10);
+
+
+app.use(session({
+    store: new sessionStore(),
+    secret: secretString,
+    rolling: true,
+    cookie : { path: '/', httpOnly: true, secure: false, maxAge: 3600000 },
+    resave: false,
+    saveUninitialized: false
+}));
+
+
 /**
  * Set up the routing, interceptors, settings and commands.
  * .. is used when it lies in the parent directory of the IoC loader

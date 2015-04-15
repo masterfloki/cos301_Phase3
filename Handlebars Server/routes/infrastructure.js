@@ -46,12 +46,14 @@ module.exports = function (router, database, authentication, csds, spaces, notif
      * @param password {String}
      * @param result
      */
-    function Login(username, password, result, lastPage) {
+    function Login(username, password, result, req, lastPage) {//how is lastPage passed through????
         csds.login(username, password, function (res) {
             if (res === true) {
                 //FindUserModules(username, password);
                 //GetUserRolesForModules(obj.usmemberID);
                 //TODO Create session and store username in it
+                var session = req.session;
+                session.userId = username;//this is assuming we only log in with our userids which are our student numbers
                 if (lastPage) {
                     result.redirect(lastPage);
                 } else {
@@ -232,8 +234,18 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         res.render('./csds-views/login');
     });
 
-    router.get('logout', function(re, res, next) {
-        res.render('./csds-views/login' ,{'message': 'You have been logged out of the system.', 'message-type':'notify'})
+    router.get('logout', function(req, res, next) {
+        var session = req.session;
+        if(session !== null)
+        {
+            res.render('./csds-views/login' ,{'message': 'You have been logged out of the system.', 'message-type':'notify'});
+            session.destroy();
+        }
+        else
+        {
+            res.render('./csds-views/login');
+        }
+
     });
 
 
@@ -244,7 +256,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
          */
         var request = req.body;
 
-        Login(request.csUsername, request.csPassword, res);
+        Login(request.csUsername, request.csPassword, res, req);
     });
 
 

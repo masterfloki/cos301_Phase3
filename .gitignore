@@ -5,3 +5,4 @@ logs
 *.rej
 *.tgz
 node_modules/
+Handlebars Server/bin/sessions/
