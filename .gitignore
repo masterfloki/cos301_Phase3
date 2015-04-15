@@ -4,3 +4,4 @@ Handlebars Server/bin/locales/
 logs
 *.rej
 *.tgz
+node_modules/

@@ -20,15 +20,17 @@ module.exports = function(database, resources, reporting, status, threads, authe
         return {title: "user " + id};
     }
 
-    var space = mongoose.Schema({
-        space_ID: String,
-        space_Name: String,
-        space_Description: String
+    var spaceSchema = mongoose.Schema({
+        moduleID: String,
+        isOpen: String,
+        academicYear: Number,
+        name: String,
+        adminUsers : Array
     }, {
-        collection: 'Spaces'
+        collection: 'spaces'
     });
 
-    var ThreadSchema = new mongoose.Schema({
+    var threadSchema = new mongoose.Schema({
             thread_DateCreated: Date,
             thread_Name: String,
             thread_PostContent: Array,
@@ -46,7 +48,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
         });
 
     function getThreads(id, callback) {
-        var threadModel = mongoose.model("Threads_1", ThreadSchema);
+        var threadModel = mongoose.model("Routing-Threads", threadSchema);
         threadModel.find({thread_SpaceID: id}, function (err, threads) {
             if (err) {
             }
@@ -60,15 +62,11 @@ module.exports = function(database, resources, reporting, status, threads, authe
     }
 
     function getSpaces(callback) {
-        var spaceModel = mongoose.model('Spaces_1', space);
-        spaceModel.find({}, function (err, spaces) {
-            if (err) {
-
-            }
-            else {
+        var spaceModel = mongoose.model('Routing-Spaces', spaceSchema);
+        spaceModel.find({isOpen: 'true'}, function (err, spaces) {
+            if (!err) {
                 callback(spaces);
             }
-
         });
     }
 
@@ -77,9 +75,8 @@ module.exports = function(database, resources, reporting, status, threads, authe
      */
     var router = express.Router();
 
-    /* GET home page. */
+
     router.get('/', function (req, res, next) {
-    //Pass to page
         getSpaces(function (spaces) {
             var obj = {};
             obj.spaces = spaces;
@@ -95,17 +92,11 @@ module.exports = function(database, resources, reporting, status, threads, authe
 
     router.get('/threads', function (req, res, next) {
         var space = req.query.space;
-        getThreads(space, function (obj) {
-
-            // console.log(obj);
-            res.render('thread', obj);
+        getThreads(space, function (threads) {
+            res.render('thread', threads);
         })
     });
 
-    //Eg use get arguments from URL
-    router.get('/testing', function (req, res, next) {
-        res.render('test', getProfile(req.query.id));
-    });
 
 
     /******** Content Routing ****************/

@@ -1,0 +1,36 @@
+<div class="container-fluid">
+    <h2>Notification options for this thread</h2>
+
+    <div class="alert-{{messageType}}">
+        {{message}}
+    </div>
+    <script>
+        function followThread() {
+            $.ajax(url,{
+
+                'method':'post',
+                'action':'follow',
+                'thread':'{{threadID}}'
+            });
+        }
+
+        function unfollowThread() {
+            $.ajax(url,{
+                'method':'post',
+                'action':'unfollow',
+                'thread':'{{threadID}}'
+            });
+        }
+    </script>
+    <form action="/submitNotifyOptions" method="POST">
+        <input type="hidden" id="{{threadID}}" value="{{treadID}}" name="threadID">
+        {{#if following}}
+            <button class="btn btn-primary" onclick="followThread()">Follow Thread</button>
+        {{else}}
+            <button class="btn btn-primary" onclick="unfollowThread()" >Unfollow Thread</button>
+        {{/if}}
+
+
+        <input type="Submit" class=" btn btn-primary" value="Submit">
+    </form>
+</div>

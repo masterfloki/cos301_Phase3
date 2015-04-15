@@ -16,6 +16,8 @@
  * @param notification {notification}
  * @returns {exports}
  */
+
+var querystring = require('querystring');
 module.exports = function (router, database, authentication, csds, spaces, notification) {
     var mongoose = database.mongoose;
 
@@ -102,52 +104,21 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         res.render('./spaces-views/createSpace', {message: result});
     });
 
-    router.post('/submitNotify', function (req, res, next) {
-
-        var obj = {};
-        obj.subN = req.body.subNotify;
-        var jsonObj = {
-            type: 'follow_Thread',
-            threadID: '1',
-            studentID: 'u34567890'
-        };
-
-        var result = notification.notifyRegistration(jsonObj);
-
-        var recipientAddress = "";   //email address of recipient
-        var mailSubject = "Buzz: Registered for notification"; //Notification subject
-        var mailMessage = "Registered for notifications";//Message to be sent
-
-        notification.sendNotification(recipientAddress, mailSubject, mailMessage);
-
-        res.render('./notification-views/notify1', {message: result});
-    });
-
-    router.get('/notify2', function (req, res, next) {
-        res.render('./notification-views/notifyOptions');
-    });
-
     router.get('/notify', function (req, res, next) {
-        res.render('./notification-views/notify1');
+        res.render('./notification-views/threadNotifyWidget', {"message" : req.query.message, 'messageType':req.query.messageType});
     });
+
+
     router.post('/submitNotifyOptions', function (req, res, next) {
-        var obj = {};
-        obj.new1 = req.body.new;
-        obj.del1 = req.body.del;
-        obj.moved1 = req.body.moved;
-        obj.appReg1 = req.body.appReg;
-        obj.appDereg1 = req.body.appDereg;
         var recipientAddress = "renetteros@gmail.com";   //email address of recipient
         var result, mailSubject, mailMessage;
 
-        if (obj.new1 == "Y") {
+        if (req.body.newPost) {
             var jsonObj = {
-                threadID: '0'
+                threadID: req.body.threadID
             };
 
             result = notification.notifyDeletedThread(jsonObj);
-
-//Gmail password
 
 
             mailSubject = "Buzz: Registered for notification"; //Notification subject
@@ -155,7 +126,8 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        if (obj.del1 == "Y") {
+
+        if (req.body.deletePost) {
             jsonObj = {
                 threadID: '0'
             };
@@ -166,7 +138,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        if (obj.moved1 == "Y") {
+        if (req.body.threadMoved) {
             jsonObj = {
                 threadID: '0'
             };
@@ -177,7 +149,8 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        if (obj.appReg1 == "Y") {
+        if (req.body.appraisalRegister) {
+            //TODO Don't hardcode
             jsonObj = {
                 appraisalType: 'Funny',
                 studentID: 'u34567890'
@@ -190,7 +163,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
 
         }
-        if (obj.appDereg1 == "Y") {
+        if (req.body.appraisalDeregister) {
             //TODO studentID from seesion
             jsonObj = {
                 appraisalType: 'Funny',
@@ -207,7 +180,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        res.render('./notification-views/notifyOptions', {message: result});
+        res.redirect('/notify?' + querystring.stringify({'message':'Notification options changed', 'messageType':'success'}));
     });
 
     router.post('/submitRS', function (req, res, next) {
