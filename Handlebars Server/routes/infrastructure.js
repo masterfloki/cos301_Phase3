@@ -48,16 +48,21 @@ module.exports = function (router, database, authentication, csds, spaces, notif
      * @param password {String}
      * @param result
      */
-    function Login(username, password, result) {
+    function Login(username, password, result, lastPage) {
         csds.login(username, password, function (res) {
             if (res === true) {
                 //FindUserModules(username, password);
                 //GetUserRolesForModules(obj.usmemberID);
                 //TODO Create session and store username in it
-                result.redirect("/");
+                if (lastPage) {
+                    result.redirect(lastPage);
+                } else {
+                    result.redirect("/");
+                }
             }
             else {
-                result.render('./csds-views/login', {LoginResult: 'Failed to login'});
+                var loginPage = './csds-views/login';
+                result.render(loginPage, {message: 'Failed to login', messageType: 'danger'});
             }
         });
     }
@@ -132,8 +137,8 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         obj.moved1 = req.body.moved;
         obj.appReg1 = req.body.appReg;
         obj.appDereg1 = req.body.appDereg;
-
-        var result, recipientAddress, mailSubject, mailMessage;
+        var recipientAddress = "renetteros@gmail.com";   //email address of recipient
+        var result, mailSubject, mailMessage;
 
         if (obj.new1 == "Y") {
             var jsonObj = {
@@ -143,29 +148,25 @@ module.exports = function (router, database, authentication, csds, spaces, notif
             result = notification.notifyDeletedThread(jsonObj);
 
 //Gmail password
-            recipientAddress = "";   //email address of recipient
+
 
             mailSubject = "Buzz: Registered for notification"; //Notification subject
             mailMessage = "Registered for notifications regarding the creation of threads on this post";//Message to be sent
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        else if (obj.del1 == "Y") {
+        if (obj.del1 == "Y") {
             jsonObj = {
                 threadID: '0'
             };
             result = notification.notifyDeletedThread(jsonObj);
-
-
-//Gmail password
-            recipientAddress = "";   //email address of recipient
 
             mailSubject = "Buzz: Registered for notification"; //Notification subject
             mailMessage = "Registered for notifications regarding the deletion of threads on this post";//Message to be sent
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        else if (obj.moved1 == "Y") {
+        if (obj.moved1 == "Y") {
             jsonObj = {
                 threadID: '0'
             };
@@ -176,7 +177,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
             notification.sendNotification(recipientAddress, mailSubject, mailMessage);
         }
-        else if (obj.appReg1 == "Y") {
+        if (obj.appReg1 == "Y") {
             jsonObj = {
                 appraisalType: 'Funny',
                 studentID: 'u34567890'
@@ -186,10 +187,11 @@ module.exports = function (router, database, authentication, csds, spaces, notif
             mailSubject = "Buzz: Registered for notification"; //Notification subject
             mailMessage = "Registered for appraisals notifications";//Message to be sent
 
-            notification.sendNotification(userAddress, userAddressPassword, senderAddress, recipientAddress, mailSubject, mailMessage);
+            notification.sendNotification(recipientAddress, mailSubject, mailMessage);
 
         }
-        else if (obj.appDereg1 == "Y") {
+        if (obj.appDereg1 == "Y") {
+            //TODO studentID from seesion
             jsonObj = {
                 appraisalType: 'Funny',
                 studentID: 'u34567890'
@@ -198,7 +200,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
 
 //Gmail password
-            recipientAddress = "";   //email address of recipient
+
 
             mailSubject = "Buzz: Registered for notification"; //Notification subject
             mailMessage = "Deregistered for appraisal notifications";//Message to be sent
@@ -207,6 +209,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         }
         res.render('./notification-views/notifyOptions', {message: result});
     });
+
     router.post('/submitRS', function (req, res, next) {
 
         var obj = {};

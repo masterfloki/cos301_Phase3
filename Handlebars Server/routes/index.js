@@ -80,9 +80,9 @@ module.exports = function(database, resources, reporting, status, threads, authe
     /* GET home page. */
     router.get('/', function (req, res, next) {
     //Pass to page
-        getSpaces(function (obj2) {
+        getSpaces(function (spaces) {
             var obj = {};
-            obj.spaces = obj2;
+            obj.spaces = spaces;
             obj.title = "Buzz++@UP";
             //console.log(obj);
             res.render('index', obj);

@@ -76,7 +76,7 @@ module.exports = function(router, resources, reporting, status, threads){
     });
 
 
-    router.post('/addPost', function(req, res, next){
+    router.post('/submitPost', function(req, res, next){
 
 
     });
