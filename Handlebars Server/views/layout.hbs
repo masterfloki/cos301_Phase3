@@ -14,19 +14,52 @@
       <![endif]-->
 
       <title>{{title}}</title>
+      <!-- Jquery and Handlebars -->
+      <script src="/javascripts/jquery-1.11.2.min.js" ></script>
+      <script src="/javascripts/handlebars.runtime.min.js" ></script>
 
       <!-- Bootstrap -->
       <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
       <link href="/stylesheets/bootstrap-theme.min.css" rel="stylesheet">
       <script src="/javascripts/bootstrap.min.js"></script>
 
-    <!-- Jquery and Handlebars -->
-      <script src="/javascripts/jquery-1.11.2.min.js" ></script>
-      <script src="/javascripts/handlebars.runtime.min.js" ></script>
+
+
+      <script>
+          var child = 'span';
+          $(function() {
+              var $globalAlert = $('#global-alert');
+
+              $("#global-alert-close").click(function() {
+                  $globalAlert.slideUp(500);
+              });
+              if (!($globalAlert.children(child).html())) {
+                  $globalAlert.hide();
+              }
+
+
+          });
+
+          alertMessage = function(data) {
+              var $globalAlert = $("#global-alert");
+              $globalAlert.hide().removeClass().addClass("alert alert-" + (data.messageType || "info"));
+              $globalAlert.children(child).html(data.message || "");
+              if ($globalAlert.children(child).html()) {
+                  $globalAlert.show();
+              }
+          };
+
+          alertError = function(xhr) {
+              alertMessage({
+                  message : xhr.responseText,
+                  messageType : 'danger'
+              });
+          }
+      </script>
   </head>
   <body>
-  <header class="container-fluid">
-      <div class="page-header text-center">
+  <header class="container-fluid page-header">
+      <div class="text-center">
         <h1 id="BuzzHeading" class="text-capitalize">Buzz++@UP<br>
         <small>A discussion board created for the COS301 Mini Project 2015</small></h1>
       </div>
@@ -40,6 +73,10 @@
       </ul>
   </header>
   <div class="main container-fluid" role="main">
+      <div class="alert alert-{{messageType}}" id="global-alert">
+          <span>{{message}}</span>
+          <button type="button" class="close" aria-label="close" id="global-alert-close" onclick>&times;</button>
+      </div>
     {{{body}}}
   </div>
   <footer class="container-fluid text-center">

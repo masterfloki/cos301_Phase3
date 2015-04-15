@@ -3,10 +3,6 @@
  */
 
 /**
- * @typedef
- */
-
-/**
  * Appends infrastructure routing to router.
  * @param router {exports}
  * @param database {BuzzDatabase}
@@ -33,7 +29,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         });
     }
 
-     function GetActiveModulesForYear() {
+    function GetActiveModulesForYear() {
         csds.getActiveModulesForYear(function (res) {
             try {
                 console.log(res);
@@ -104,83 +100,42 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         res.render('./spaces-views/createSpace', {message: result});
     });
 
+    //TODO Remove after testing
     router.get('/notify', function (req, res, next) {
         res.render('./notification-views/threadNotifyWidget', {"message" : req.query.message, 'messageType':req.query.messageType});
     });
+    router.post('/ajax/addNotification', function (req, res, next) {
+        /**
+         * @type {{action : string, target : string}}
+         */
+        var data = req.body;
+        var myId = global.getSessionUserID(req);
 
+        switch(data.action)  {
+            case 'followThread':
+                notification.notifyRegistration({type:'follow_Thread', threadID:data.target, studentID:myId});
+                break;
+            case 'followUSer':
+                notification.notifyRegistration({type:'follow_User', userID:data.target, studentID:myId});
+                break;
+            case 'followAppraisal':
+                notification.appraisalDeregister({appraisalType:data.target, studentID:myId});
+                break;
 
-    router.post('/submitNotifyOptions', function (req, res, next) {
-        var recipientAddress = "renetteros@gmail.com";   //email address of recipient
-        var result, mailSubject, mailMessage;
-
-        if (req.body.newPost) {
-            var jsonObj = {
-                threadID: req.body.threadID
-            };
-
-            result = notification.notifyDeletedThread(jsonObj);
-
-
-            mailSubject = "Buzz: Registered for notification"; //Notification subject
-            mailMessage = "Registered for notifications regarding the creation of threads on this post";//Message to be sent
-
-            notification.sendNotification(recipientAddress, mailSubject, mailMessage);
+            case 'unfollowThread':
+                notification.notifyDeregistration({type:'deregister_Thread', threadID:data.target, studentID:myId});
+                break;
+            case 'unfollowUser':
+                notification.notifyDeregistration({type:'deregister_User', userID:data.target, studentID:myId});
+                break;
+            case 'unfollowAppraisal':
+                notification.appraisalDeregister({appraisalType:data.target, studentID:myId});
+                break;
+            default:
+                console.log("unknown Action");
         }
 
-        if (req.body.deletePost) {
-            jsonObj = {
-                threadID: '0'
-            };
-            result = notification.notifyDeletedThread(jsonObj);
-
-            mailSubject = "Buzz: Registered for notification"; //Notification subject
-            mailMessage = "Registered for notifications regarding the deletion of threads on this post";//Message to be sent
-
-            notification.sendNotification(recipientAddress, mailSubject, mailMessage);
-        }
-        if (req.body.threadMoved) {
-            jsonObj = {
-                threadID: '0'
-            };
-            result = notification.notifyMovedThread(jsonObj);
-
-            mailSubject = "Buzz: Registered for notification"; //Notification subject
-            mailMessage = "Registered for notifications regarding the moving of threads on this post";//Message to be sent
-
-            notification.sendNotification(recipientAddress, mailSubject, mailMessage);
-        }
-        if (req.body.appraisalRegister) {
-            //TODO Don't hardcode
-            jsonObj = {
-                appraisalType: 'Funny',
-                studentID: 'u34567890'
-            };
-            result = notification.appraisalRegister(jsonObj);
-
-            mailSubject = "Buzz: Registered for notification"; //Notification subject
-            mailMessage = "Registered for appraisals notifications";//Message to be sent
-
-            notification.sendNotification(recipientAddress, mailSubject, mailMessage);
-
-        }
-        if (req.body.appraisalDeregister) {
-            //TODO studentID from seesion
-            jsonObj = {
-                appraisalType: 'Funny',
-                studentID: 'u34567890'
-            };
-            result = notification.appraisalDeregister(jsonObj);
-
-
-//Gmail password
-
-
-            mailSubject = "Buzz: Registered for notification"; //Notification subject
-            mailMessage = "Deregistered for appraisal notifications";//Message to be sent
-
-            notification.sendNotification(recipientAddress, mailSubject, mailMessage);
-        }
-        res.redirect('/notify?' + querystring.stringify({'message':'Notification options changed', 'messageType':'success'}));
+        res.status(200).send({message:myId + '\'s  notification settings has been changed.'});
     });
 
     router.post('/submitRS', function (req, res, next) {

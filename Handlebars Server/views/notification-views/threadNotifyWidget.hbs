@@ -1,45 +1,57 @@
-<div class="container-fluid">
-    <h2>Notification options for this thread</h2>
+<script>
+    (function() {
+        var ajaxLocation = 'ajax/addNotification';
+        var thread = '{{thread_ID}}';
+        var following = Boolean({{following}});
+        $(function () {
+            var unfollowBtn = $("#unfollow-" + thread);
+            var followBtn = $("#follow-" + thread);
+            if (following) {
+                followBtn.hide().click(followThread);
+                unfollowBtn.show().click(unfollowThread);
+            } else {
+                unfollowBtn.hide().click(unfollowThread);
+                followBtn.show().click(followThread);
+            }
+        });
 
-    <div class="alert-{{messageType}}">
-        {{message}}
-    </div>
-    <script>
         function followThread() {
-            $.ajax(url,{
-
-                'method':'POST',
-                data : {
-                    'action': 'follow',
-                    'thread': '{{threadID}}'
+            $.ajax({
+                url: ajaxLocation,
+                method: 'POST',
+                data: {
+                    action: 'followThread',
+                    target: thread
                 },
-                success : function(data) {}
-
+                success: function (data) {
+                    alertMessage(data);
+                    $("#follow-" + thread).hide();
+                    $("#unfollow-" + thread).show();
+                },
+                error: alertError
             });
         }
 
         function unfollowThread() {
-            $.ajax(url,{
-                'method':'POST',
-                data : {
-                    'action': 'unfollow',
-                    'thread': '{{threadID}}'
+            $.ajax({
+                url: ajaxLocation,
+                method: 'POST',
+                data: {
+                    action: 'unfollowThread',
+                    target: thread
                 },
-                success : function(data) {}
+                success: function (data) {
+                    alertMessage(data);
+                    $("#unfollow-" + thread).hide();
+                    $("#follow-" + thread).show();
+                },
+                error: alertError
+
             });
         }
-    </script>
-
-        {{#if following}}
-            <button class="btn btn-primary" onclick="unfollowThread()" >Unfollow Thread</button>
-        {{else}}
-            <button class="btn btn-primary" onclick="followThread()">Follow Thread</button>
-        {{/if}}
-
-    <form name="appraisals" id="appraisals">
-        <h2>Register to follow appraisals</h2>
-        <input class="form-control" type="text" name="appraisalName" id="appraisal" placeholder="eg. funny"><br>
-        <button class="btn btn-primary" onclick="followAppraisal()">Follow Appraisal</button>
-        <button class="btn btn-primary" onclick="unfollowAppraisal()" >Unfollow Appraisal</button>
-    </form>
+    })();
+</script>
+<div class="container-fluid" >
+    <button class="btn btn-primary" id="unfollow-{{thread_ID}}">Unfollow</button>
+    <button class="btn btn-primary" id="follow-{{thread_ID}}">Follow</button>
 </div>

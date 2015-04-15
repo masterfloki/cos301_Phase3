@@ -12,14 +12,28 @@
  * @returns {exports}
  */
 module.exports = function(database, resources, reporting, status, threads, authentication, csds, spaces, notification) {
-    var express = require('express');
+    /** Register hbs partials ***/
+    var hbs = require('hbs');
+    var fs = require('fs');
+
+    var registerHbsPartials = function (dir) {
+        var filenames = fs.readdirSync(dir);
+
+        filenames.forEach(function (filename) {
+            var matches = /^([^.]+).hbs$/.exec(filename);
+            if (!matches) {
+                return;
+            }
+            var name = matches[1];
+            var template = fs.readFileSync(dir + '/' + filename, 'utf8');
+            hbs.registerPartial(name, template);
+        });
+    };
+    registerHbsPartials(__dirname + "/../views/notification-views");
 
     var mongoose = database.mongoose;
-
-    function getProfile(id) {
-        return {title: "user " + id};
-    }
-
+    var express = require('express');
+    var router = express.Router();
     var spaceSchema = mongoose.Schema({
         moduleID: String,
         isOpen: String,
@@ -29,8 +43,8 @@ module.exports = function(database, resources, reporting, status, threads, authe
     }, {
         collection: 'spaces'
     });
-
     var threadSchema = new mongoose.Schema({
+            thread_ID:String,
             thread_DateCreated: Date,
             thread_Name: String,
             thread_PostContent: Array,
@@ -46,8 +60,17 @@ module.exports = function(database, resources, reporting, status, threads, authe
         },{
             collection: 'Threads'
         });
+    var followingThread = new mongoose.Schema({
+            notification_ThreadID : String,
+            notification_StudentID : String
+    }, {
+        collection: 'Notifications_Thread'
+    });
 
-    function getThreads(id, callback) {
+
+    /**** Helper functions ****/
+
+    var getThreads = function (id, callback) {
         var threadModel = mongoose.model("Routing-Threads", threadSchema);
         threadModel.find({thread_SpaceID: id}, function (err, threads) {
             if (err) {
@@ -56,32 +79,47 @@ module.exports = function(database, resources, reporting, status, threads, authe
                 var newData = {};
                 newData.title = id;
                 newData.threads = threads;
+                var updateCount = 0;
+                for (var i=0; i<threads.length; ++i) {
+
+                }
+
+
+               //$.each(threads, function(key, value) {
+
+              //  });
                 callback(newData);
             }
         });
-    }
-
-    function getSpaces(callback) {
+    };
+    var getSpaces = function(callback) {
         var spaceModel = mongoose.model('Routing-Spaces', spaceSchema);
         spaceModel.find({isOpen: 'true'}, function (err, spaces) {
             if (!err) {
                 callback(spaces);
             }
         });
-    }
-
-    /**
-     * @type {exports}
-     */
-    var router = express.Router();
-
+    };
+    global.getSessionUserID = function (req) {
+        //TODO in production this should just be teh session part
+        if (app.get('env') === 'production') {
+            return req.session.userID;
+        }
+        ;//If not in production se defaulkt value
+        var myUid;
+        try {
+            myUid = req.session.userID | 'u00000000';
+        } catch (e) {
+            myUid = 'u00000000'
+        }
+        return myUid;
+    };
 
     router.get('/', function (req, res, next) {
         getSpaces(function (spaces) {
             var obj = {};
             obj.spaces = spaces;
             obj.title = "Buzz++@UP";
-            //console.log(obj);
             res.render('index', obj);
         })
     });
