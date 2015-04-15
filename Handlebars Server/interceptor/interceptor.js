@@ -121,6 +121,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
 };
 
 exports['@literal'] = false;
+exports['@singleton'] = true;
 exports['@require'] = ['buzz-database', 'buzz-csds', 'buzz-threads', 'buzz-spaces', 'buzz-notification', 'buzz-status', 'buzz-resources','buzz-reporting', 'buzz-authentication'];
 
 ///**Mock authorization, doesnt do much just some randomness when it comes to authorizing stuff**/
