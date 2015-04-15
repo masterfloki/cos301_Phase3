@@ -1,3 +1,5 @@
+
+
 /**
  *
  * @param database {BuzzDatabase}
@@ -12,6 +14,21 @@
  * @returns {exports}
  */
 module.exports = function(database, resources, reporting, status, threads, authentication, csds, spaces, notification) {
+    global.getSessionUserID = function (req) {
+        //TODO in production this should just be teh session part
+        if (app.get('env') === 'production') {
+            return req.session.userID;
+        }
+        ;//If not in production se defaulkt value
+        var myUid;
+        try {
+            myUid = req.session.userID | 'u00000000';
+        } catch (e) {
+            myUid = 'u00000000'
+        }
+        return myUid;
+    };
+
     /** Register hbs partials ***/
     var hbs = require('hbs');
     var fs = require('fs');
@@ -70,26 +87,37 @@ module.exports = function(database, resources, reporting, status, threads, authe
 
     /**** Helper functions ****/
 
-    var getThreads = function (id, callback) {
+    var getThreads = function (spaceID, myID, callback) {
         var threadModel = mongoose.model("Routing-Threads", threadSchema);
-        threadModel.find({thread_SpaceID: id}, function (err, threads) {
+
+        threadModel.find({thread_SpaceID: spaceID}, function (err, threads) {
             if (err) {
             }
             else {
                 var newData = {};
-                newData.title = id;
+                newData.title = spaceID;
                 newData.threads = threads;
                 var updateCount = 0;
-                for (var i=0; i<threads.length; ++i) {
+                var followModel = mongoose.model("Following-Thread", followingThread);
+                followModel.find({notification_StudentID: myID}, function (err, data) {
+                    if (!err) {
+                        var followingThreads = []
+                        data.forEach(function(entry) {
+                            followingThreads.push(entry.notification_ThreadID);
+                        });
 
-                }
+                        threads.forEach(function (entry) {
+                            entry.following = followingThreads.indexOf(entry.thread_ID) > -1;
+                        });
 
+                    }
+                    callback(newData);
 
-               //$.each(threads, function(key, value) {
+                });
+                //$.each(threads, function(key, value) {
 
-              //  });
-                callback(newData);
             }
+
         });
     };
     var getSpaces = function(callback) {
@@ -99,20 +127,6 @@ module.exports = function(database, resources, reporting, status, threads, authe
                 callback(spaces);
             }
         });
-    };
-    global.getSessionUserID = function (req) {
-        //TODO in production this should just be teh session part
-        if (app.get('env') === 'production') {
-            return req.session.userID;
-        }
-        ;//If not in production se defaulkt value
-        var myUid;
-        try {
-            myUid = req.session.userID | 'u00000000';
-        } catch (e) {
-            myUid = 'u00000000'
-        }
-        return myUid;
     };
 
     router.get('/', function (req, res, next) {
@@ -130,7 +144,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
 
     router.get('/threads', function (req, res, next) {
         var space = req.query.space;
-        getThreads(space, function (threads) {
+        getThreads(space, global.getSessionUserID(req), function (threads) {
             res.render('thread', threads);
         })
     });
