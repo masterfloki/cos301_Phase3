@@ -82,7 +82,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
             else
             {
                 //console.log("Not Authorized");
-                throw {'status':500,'message':'Unauthorized Access Restricted'};
+                throw {'status':401,'message':'Unauthorized Access Restricted'};
             }
         }
     };
@@ -125,4 +125,3 @@ exports['@singleton'] = true;
 exports['@require'] = ['buzz-database', 'buzz-csds', 'buzz-threads', 'buzz-spaces', 'buzz-notification', 'buzz-status', 'buzz-resources','buzz-reporting', 'buzz-authentication'];
 
 ///**Mock authorization, doesnt do much just some randomness when it comes to authorizing stuff**/
-
