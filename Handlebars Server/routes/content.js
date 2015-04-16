@@ -82,7 +82,7 @@ module.exports = function(router, resources, reporting, status, threads){
     });
 
     router.get('/report', function(req, res, next){
-        res.render('./reporting-views/reports');
+        res.render('./reporting-views/reports', {title:"Reports"});
     });
 
     router.post('/downloadreport',function(req, res, next){
