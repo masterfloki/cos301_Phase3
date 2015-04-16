@@ -3,6 +3,7 @@
  * @param val
  * @returns {string|Number|Boolean}
  */
+ 
 function normalizePort(val) {
     var port = parseInt(val, 10);
 
@@ -20,10 +21,17 @@ function normalizePort(val) {
 }
 
 module.exports = function() {
-    return {
+    
+	var servers = {}
+	
+	//servers.database = 'mongodb://45.55.154.156:27017/Buzz';
+	servers.database = 'mongodb://makerspace.up.ac.za:27017/Buzz';
+	servers.ldap = 'ldaps://ldap.cs.up.ac.za';
+	
+	return {
         'port': normalizePort(process.env.PORT || '3000'),
-        'database':'mongodb://45.55.154.156:27017/Buzz',
-        'ldap' : '',
+        'database': servers.database,
+        'ldap' : servers.ldap,
         killTimeout:500,
         'email' : {
             'address' : '301emailtest@gmail.com',

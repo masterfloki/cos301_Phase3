@@ -10,22 +10,23 @@ var request = require('supertest')
         .get('/')
         .expect(200, done);
     });
-	
+
     it('respond with plain text', function(done){
       request(app)
-        .get('/')
+        .get('/blank')
         .expect(200, done);
     });
-	
+
     it('respond with plain text', function(done){
       request(app)
-        .get('/')
+        .get('/threads')
         .expect(200, done);
     });
-	
+
     it('respond with plain text', function(done){
       request(app)
-        .get('/')
+        .get('/testing')
         .expect(200, done);
     });
+
   });
