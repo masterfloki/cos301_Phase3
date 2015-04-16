@@ -82,38 +82,6 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         }
     }
 
-    router.get('/closeSpace', function (req, res, next) {
-        res.render('./spaces-views/closeSpace');
-    });
-
-    router.get('/infrastructure', function (req, res, next) {
-        res.render('infrastructure', {modules: '', 'title': 'Infrastructure integration'});
-    });
-
-    router.get('/manageSpace', function (req, res, next) {
-        res.render('./spaces-views/manageSpace');
-    });
-
-    router.post('/ajax/newSpace', function (req, res, next) {
-        var obj = {};
-        /**
-         * Body of POST request
-         * @type {{moduleID : String, moduleName : String, academicYear : number}}
-         */
-        var request = req.body;
-        var myId = global.getSessionUserID(req);
-        obj.academicYear = request.academicYear;
-        obj.isOpen = true;
-        obj.moduleID = request.moduleID;
-        obj.name = request.moduleName;
-
-        obj.adminUsers = [myId];
-
-        var result = spaces.createBuzzSpace(obj);
-
-        res.send(result);
-    });
-
     router.post('/ajax/addNotification', function (req, res, next) {
         /**
          * @type {{action : string, target : string}}
@@ -148,17 +116,45 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         res.status(200).send({message:myId + '\'s  notification settings has been changed.'});
     });
 
+    router.get('/manageSpace', function (req, res, next) {
+        var context = {title:"Manage BuzzSpace"};
+
+        context.spaceID = req.query.space;
+        context.message = req.query.message;
+        context.messageType = req.query.messageType || "notify";
+
+        res.render('./spaces-views/manageSpace', context);
+    });
+
+    router.post('/ajax/newSpace', function (req, res, next) {
+        var obj = {};
+        /**
+         * Body of POST request
+         * @type {{moduleID : String, moduleName : String, academicYear : number}}
+         */
+        var request = req.body;
+        var myId = global.getSessionUserID(req);
+        obj.academicYear = request.academicYear;
+        obj.isOpen = true;
+        obj.moduleID = request.moduleID;
+        obj.name = request.moduleName;
+
+        obj.adminUsers = [myId];
+
+        var result = spaces.createBuzzSpace(obj);
+
+        res.send(result);
+    });
+
     router.post('/submitRS', function (req, res, next) {
 
         var obj = {};
         obj.moduleID = req.body.RSmodule;
 
-        obj.callback = function (err, response) {
-            console.log(response);
+        obj.callback = function (response) {
+            res.redirect('manageSpace?' + querystring.stringify({spaceID : obj.moduleID, message: response}));
         };
         var result = spaces.closeBuzzSpace(obj);
-
-        res.render('./spaces-views/closeSpace', {message: result});
     });
 
     router.post('/submitAAM', function (req, res, next) {
@@ -168,7 +164,8 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
         var result = spaces.assignAdministrator(obj);
 
-        res.render('./spaces-views/adminManagement', {message: result});
+        res.redirect('manageSpace?' + querystring.stringify({spaceID : obj.moduleID, message: "Adminstrator settings changed"}));
+
     });
 
     router.post('/submitRAM', function (req, res, next) {
@@ -176,15 +173,10 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         obj.moduleID = req.body.Radmin;
         obj.userID = req.body.RAid;
 
-        obj.callback = function (err, response) {
-            console.log(response);
+        obj.callback = function (response) {
+            res.redirect('manageSpace?' + querystring.stringify({spaceID : obj.moduleID, message: response}));
         };
         var result = spaces.removeAdministrator(obj);
-        res.render('./spaces-views/adminManagement', {message: result});
-    });
-
-    router.get('/registerUser', function (req, res, next) {
-        res.render('./spaces-views/registerUser');
     });
 
     router.post('/submitRU', function (req, res, next) {
@@ -194,13 +186,12 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         obj.userID = req.body.RUuserid;
         obj.moduleID = req.body.RUmoduleid;
 
-        obj.callback = function (err, response) {
-            console.log(response);
+        obj.callback = function (response) {
+            res.redirect('manageSpace?' + querystring.stringify({spaceID : obj.moduleID, message: response}));
         };
-        var result = spaces.registerOnBuzzSpace(obj);
+        spaces.registerOnBuzzSpace(obj);
 
         //console.log("this is the result " + result);
-        res.render('./spaces-views/registerUser', {message: result});
     });
 
     var authSchema = mongoose.Schema({

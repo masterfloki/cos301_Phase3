@@ -1,10 +1,5 @@
 <div class="panel space" id="space-{{this.moduleID}}">
-    <script>
-        var t = "{{this.moduleID}}";
-        var ref = encodeURI(t);
-        var a = '<a href="threads?space=' + ref + '">{{this.moduleID}} - {{this.name}}</a>';
-        document.write(a);
-    </script>
+    <a href="threads?space={{this.moduleID}}">{{this.moduleID}} - {{this.name}}</a>
     <p>Year: {{this.academicYear}}</p>
     <!--TODO Maybe list admins? -->
 </div>
