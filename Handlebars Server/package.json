@@ -26,7 +26,6 @@
     "express-session": "^1.11.1",
     "hbs": "~2.9.0",
     "i18n-2": "^0.4.6",
-    "mongoose": "^4.0.1",
     "node-aop": "^0.1.0",
     "scribe-js": "^2.0.4",
     "serve-favicon": "~2.2.0",
