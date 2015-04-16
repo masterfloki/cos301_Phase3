@@ -145,6 +145,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
     router.get('/threads', function (req, res, next) {
         var space = req.query.space;
         getThreads(space, global.getSessionUserID(req), function (threads) {
+            threads.spaceID = space;
             res.render('thread', threads);
         })
     });

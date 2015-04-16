@@ -1,0 +1,38 @@
+<h2>Manage {{spaceID}}</h2>
+<form id="addAdmin">
+    <h3>Add admin</h3>
+    <label for="AAid">User ID</label>
+    <input type="text" id="AAid" name="AAid">
+    <input type="hidden" value="{{spaceID}}" id="Aadmin" name="Aadmin">
+    <input type="submit" value="Add Admin">
+</form>
+
+<form id="removeAdmin" action="/submitRAM" method="post">
+    <h3> Remove Admin</h3>
+    <label for="RSid">User ID</label>
+    <input type="text" id="RSid" name="RSid">
+    <input type="hidden" value="{{spaceID}}" id="RAid" name="RAid">
+    <input type="submit" value="Remove Admin">
+</form>
+
+<form id = "addForm" action="/submitRU" method="post">
+<h3>Register User on Buzz Space</h3>
+            <td>Buzz Space User Name: </td>
+
+                <input type="textbox" id="RUuserName" name="RUuserName">
+            <td class="headerNames">Signature: </td>
+            <td>
+                <input type="textbox" id="RUsignature" name="RUsignature">
+            </td>
+            <td class="headerNames">User ID: </td>
+            <td>
+                <input type="textbox" id="RUuserid" name="RUuserid">
+            <td>Module ID: </td>
+            <td>
+                <input type="textbox" id="RUmoduleid" name="RUmoduleid">
+            </td>
+            <td>
+                <input type="Submit" value="Create User">
+            </td>
+
+</form>

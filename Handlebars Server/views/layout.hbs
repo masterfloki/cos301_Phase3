@@ -48,9 +48,10 @@
               }
           };
 
-          alertError = function(xhr) {
+          alertError = function(xhr, textStatus, errorThrown) {
               alertMessage({
-                  message : xhr.responseText,
+
+                  message : errorThrown,
                   messageType : 'danger'
               });
           }
