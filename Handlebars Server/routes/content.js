@@ -12,7 +12,7 @@
  * @param threads Buzz-Threads Module
  * @returns {exports} The router object with handlers appended
  */
-module.exports = function(router, resources, reporting, status, threads){
+module.exports = function(router, database, resources, reporting, status, threads){
 
     var bodyparser = require('body-parser');
     var urlencodedparser = bodyparser.urlencoded({extended:false});
@@ -81,25 +81,71 @@ module.exports = function(router, resources, reporting, status, threads){
 
     });
 
-    router.get('/report', function(req, res, next){
-        res.render('./reporting-views/reports', {title:"Reports"});
+    var mongoose = database.mongoose;
+    var spaceSchema = mongoose.Schema({
+        moduleID: String,
+        isOpen: String,
+        academicYear: Number,
+        name: String,
+        adminUsers : Array
+        }, {
+        collection: 'spaces'
     });
 
+    var getSpaces = function(callback) {
+        var spaceModel = mongoose.model('Reporting-Spaces', spaceSchema);
+        spaceModel.find({isOpen: 'true'}, function (err, spaces) {
+            if (!err) {
+                callback(spaces);
+            }
+        });
+    };
+
+    router.get('/report', function(req, res, next){
+        getSpaces(function (spaces) {
+            var obj = {};
+            obj.spaces = spaces;
+            obj.title = 'Reports';
+            res.render('./reporting-views/reports', obj);
+        })
+
+    });
+
+
+
+
+
+
+
+
     router.post('/downloadreport',function(req, res, next){
+
         var reportType = req.body.reportType;
         switch(reportType)
         {
-            case 'students':
+            case 'subTypeStudent':
                 var subTypeStudent = req.body.subTypeStudent;
                 reporting.getStudents(res);
                 break;
-            case 'lecturers':
+            case 'subTypeLecturers':
                 var subTypeLecturers = req.body.subTypeLecturers;
                 reporting.getLecturers(res);
                 break;
-            case 'threads':
+            case 'subTypeThreads':
                 var subTypeThreads = req.body.subTypeThreads;
-                reporting.getThreads(res);
+                switch(subTypeThreads)
+                {
+                    case 'allThreads':
+                        reporting.getThreads(res);
+                        break;
+                    case 'spaceThreads':
+                        var course = req.body.spacesSelect;
+                        reporting.getThreadsBy(course,res);
+                        break;
+                    default:
+                        break;
+                }
+
                 break;
             default:
                 break;    
