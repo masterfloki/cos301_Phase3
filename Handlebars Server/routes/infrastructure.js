@@ -90,8 +90,8 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         res.render('infrastructure', {modules: '', 'title': 'Infrastructure integration'});
     });
 
-    router.get('/adminManagement', function (req, res, next) {
-        res.render('./spaces-views/adminManagement');
+    router.get('/manageSpace', function (req, res, next) {
+        res.render('./spaces-views/manageSpace');
     });
 
     router.post('/ajax/newSpace', function (req, res, next) {
