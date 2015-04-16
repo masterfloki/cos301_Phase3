@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test" : "node ./node_modules/mocha/bin/mocha"
   },
   "dependencies": {
     "buzz-authentication": "^1.0.0",
@@ -16,7 +17,7 @@
     "buzz-spaces": "^1.0.0",
     "buzz-status": "^1.0.0",
     "buzz-threads": ">=0.0.1",
-    "buzz-commands":"^0.x.x",
+    "buzz-commands": "^0.x.x",
     "body-parser": "~1.12.0",
     "cookie-parser": "~1.3.4",
     "debug": "~2.1.1",
@@ -26,13 +27,20 @@
     "i18n-2": "^0.4.6",
     "node-aop": "^0.1.0",
     "scribe-js": "^2.0.4",
-    "serve-favicon": "~2.2.0"
+    "serve-favicon": "~2.2.0",
+    "express-session": "~1.11.1"
   },
   "optionalDependencies": {
     "database": ">=1.0.0"
   },
   "devDependencies": {
-    "unit.js": "^1.1.3"
+    "unit.js": "^1.1.3",
+    "should": "~5.2.0",
+    "supertest": "~0.15.0",
+    "mocha": "~2.2.4"
+  },
+  "publishConfig": {
+    "registry": "http://45.55.188.104:4873"
   },
   "bundleDependencies": [
     "buzz-authentication",
