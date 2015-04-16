@@ -1,0 +1,37 @@
+<!-- TODO use Ajax -->
+<h2>Manage {{spaceID}}</h2>
+<form id = "closeSpace" action="/submitRS" method="post">
+    <input type="hidden" value="{{spaceID}}" id="RSmodule" name="RSmodule">
+    <input type="submit" class="btn btn-primary" value="Close Space">
+</form>
+
+<form id="addAdmin" class="form-inline">
+    <h3>Add admin</h3>
+    <input class="form-control" type="text" id="AAid" name="AAid" placeholder="userID">
+    <input class="form-control" type="hidden" value="{{spaceID}}" id="Aadmin" name="Aadmin">
+    <input type="submit" class="btn btn-primary" value="Add Admin">
+</form>
+
+<form id="removeAdmin" action="/submitRAM" method="post" class="form-inline">
+    <h3>Remove Admin</h3>
+    <input class="form-control" type="text" id="RSid" name="RSid" placeholder="userID">
+    <input class="form-control" type="hidden" value="{{spaceID}}" id="RAid" name="RAid">
+    <input type="submit" class="btn btn-primary" value="Remove Admin">
+</form>
+
+<form id="addForm" action="/submitRU" method="post">
+    <h3>Register User on Buzz Space</h3>
+    <label for="RUuserName">Buzz Space User Name</label>
+    <input class="form-control" type="text" id="RUuserName" name="RUuserName">
+
+    <label for="RUsignature">Signature </label>
+    <input class="form-control" type="text" id="RUsignature" name="RUsignature">
+
+    <label for="RUuserid">User ID</label>
+    <input class="form-control" type="text" id="RUuserid" name="RUuserid">
+
+    <input class="form-control" type="hidden" value="{{spaceID}}" id="RUmoduleid" name="RUmoduleid">
+
+    <input type="submit" class="btn btn-primary" value="Create User">
+
+</form>

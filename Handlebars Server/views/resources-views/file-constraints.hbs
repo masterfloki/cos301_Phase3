@@ -1,0 +1,41 @@
+<!-- TODO Add options to update -->
+<!-- TODO Add manageResources options -->
+<h2>Resource Constraints</h2>
+<h3>Existing Constraints</h3>
+<div class="container">
+    <table class="table" id="resource-constraints">
+        <thead><tr><th>#</th><th>Mime Type</th><th>Size Limit</th><th></th></tr></thead>
+        <tbody>
+        {{#each this.constraints}}
+            <tr>
+                <td><script>document.write( {{@index}} + 1)</script></td>
+                <td>{{this.mime_type}}</td>
+                <td>{{this.size_limit}} MB </td>
+                <td><form method="Post" action="removeConstraint">
+                    <input type="hidden" name="_id" value="{{this._id}}">
+                    <input type="submit" value="Remove">
+                </form></td></tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<h3>Add new Constraint</h3>
+<form id="addForm" action="/submitConstraint" method="post">
+    <div class="form-group">
+        <label for="mime-type" >Mime Type</label>
+        <input id="mime-type" required type="text" name="mime-type" class="form-control">
+    </div>
+    <div class="form-group" >
+        <label for="size-limit" >File Size Limit</label>
+        <div class="form-inline">
+            <input id="size-limit" min="0" required type="number" name="size-limit" class="form-control" >
+            <select name="size-unit" id="size-unit" class="form-control">
+                <option value="1">Bytes</option>
+                <option value="1024">KB</option>
+                <option value="1048576">MB</option>
+            </select>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" name="add" value="Add">
+</form>

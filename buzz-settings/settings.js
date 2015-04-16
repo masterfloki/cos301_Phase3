@@ -8,40 +8,33 @@ function normalizePort(val) {
     var port = parseInt(val, 10);
 
     if (isNaN(port)) {
-        // named pipe
         return val;
     }
 
     if (port >= 0) {
-        // port number
         return port;
     }
 
     return false;
 }
 
+/**
+ * @typedef {{address, password}} EmailSettings
+ * @typedef {{base, url}} CsdsSettings
+ * @typedef {{subjectRegistration, messageRegistration, subjectDeregistration, messageDeregistration, subjectNewPost, messageNewPost, subjectDeletedThread,
+    messageDeletedThread, subjectMovedThread, messageMovedThread, subjectNewAppraisal, messageNewAppraisal }} NotificationSettings
+ *
+ * @typedef {{port : number|String, database : String, killTimeout : Number, email : EmailSettings, csds : CsdsSettings, notification: NotificationSettings}} BuzzSettings
+ *
+ * @returns {BuzzSettings}
+ */
 module.exports = function() {
-    
-	var servers = {}
-	
-	//servers.database = 'mongodb://45.55.154.156:27017/Buzz';
-	servers.database = 'mongodb://makerspace.up.ac.za:27017/Buzz';
-	servers.ldap = 'ldaps://ldap.cs.up.ac.za';
-	
-	return {
-        'port': normalizePort(process.env.PORT || '3000'),
-        'database': servers.database,
-        'ldap' : servers.ldap,
-        killTimeout:500,
-        'email' : {
-            'address' : '301emailtest@gmail.com',
-            'password' : 'new301testemail'
-        },
-        'csds' : {
-            'base' : 'ou=Computer Science,o=University of Pretoria,c=ZA',
-            'url' : 'ldap://reaper.up.ac.za'
-        }
-    };
+    /**
+     * @type {BuzzSettings|exports}
+     */
+    var settings = require("./settings.json");
+    settings.port = normalizePort(settings.port);
+    return settings;
 };
 
 module.exports['@singleton'] = true;

@@ -1,0 +1,57 @@
+<script>
+    (function() {
+        var ajaxLocation = 'ajax/addNotification';
+        var thread = '{{thread_ID}}';
+        var following = Boolean({{following}});
+        $(function () {
+            var unfollowBtn = $("#unfollow-" + thread);
+            var followBtn = $("#follow-" + thread);
+            if (following) {
+                followBtn.hide().click(followThread);
+                unfollowBtn.show().click(unfollowThread);
+            } else {
+                unfollowBtn.hide().click(unfollowThread);
+                followBtn.show().click(followThread);
+            }
+        });
+
+        function followThread() {
+            $.ajax({
+                url: ajaxLocation,
+                method: 'POST',
+                data: {
+                    action: 'followThread',
+                    target: thread
+                },
+                success: function (data) {
+                    alertMessage(data);
+                    $("#follow-" + thread).hide();
+                    $("#unfollow-" + thread).show();
+                },
+                error: alertError
+            });
+        }
+
+        function unfollowThread() {
+            $.ajax({
+                url: ajaxLocation,
+                method: 'POST',
+                data: {
+                    action: 'unfollowThread',
+                    target: thread
+                },
+                success: function (data) {
+                    alertMessage(data);
+                    $("#unfollow-" + thread).hide();
+                    $("#follow-" + thread).show();
+                },
+                error: alertError
+
+            });
+        }
+    })();
+</script>
+<div class="container-fluid" >
+    <button class="btn btn-primary" id="unfollow-{{thread_ID}}">Unfollow</button>
+    <button class="btn btn-primary" id="follow-{{thread_ID}}">Follow</button>
+</div>

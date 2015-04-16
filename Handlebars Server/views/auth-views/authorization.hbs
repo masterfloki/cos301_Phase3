@@ -1,0 +1,17 @@
+<head>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="vendor/css/bootstrap.css" rel="stylesheet">
+    <script src="vendor/js/bootstrap.min.js"></script>
+
+</head>
+
+<br/>
+<br/>
+<br/>
+<select name="restrictions">
+        <option value="" {{#selected}}selected="selected"{{/selected}}> -- </option>
+    {{#each this.list}}
+         <option value="{{this.methodName}}" {{#selected}}selected="selected"{{/selected}}>{{this.methodName}}</option>
+    {{/each}}
+</select>

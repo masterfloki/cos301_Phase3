@@ -1,26 +1,59 @@
-<p>Welcome to {{title}}</p>
 <!-- Context structure:
 	{
 		title: "title"
 		spaces : [
 			{
-				space_ID:"id",
-				space_Name:"name"
-				space_Description:"name"
+				moduleID, name, academicYear
 			}
 		]	
 	}-->
-<h2>Buzz Spaces</h2>
+<h2>Active Buzz Spaces</h2>
+<div class="container-fluid" id="spaceList">
 {{#each this.spaces}}
-<div>
-    <script>
-        var t = "{{this.space_ID}}";
-        var ref = encodeURI(t);
-        var a = '<a href="threads?space=' + ref + '">{{this.space_ID}} - {{this.space_Name}}</a>';
-        document.write(a);
-    </script>
-
-    <p>Description: {{this.space_Description}}</p>
-
-</div>
+    {{>spaceLink}}
 {{/each}}
+</div>
+<form id="newThread" name="create-space" class="container-fluid" method="post" action="/blank">
+<h2>Create new Buzz-Space</h2>
+    <div class="form-group">
+        <label for="moduleID">Module ID</label>
+        <input type="text" required class="form-control" id="moduleID" name="moduleID">
+    </div>
+    <div class="form-group">
+        <label for="moduleName">Name</label>
+        <input type="text" required class="form-control" id="moduleName" name="moduleName">
+    </div>
+    <div class="form-group">
+        <label for="academicYear">Academic year</label>
+        <input type="number" min="2015" placeholder="2015" required class="form-control" id="academicYear" name="academicYear">
+    </div>
+    <input type="submit" value="Create Space" >
+</form>
+<script type="text/javascript" src="/javascripts/hbs/spaceLink.js"></script>
+<script>
+    $(function() {
+        $("#newThread").submit(function(event) {
+            event.stopPropagation();
+            var context = {
+                moduleID : $('#moduleID').val(),
+                moduleName: $('#moduleName').val(),
+                academicYear: $('#academicYear').val()
+            };
+
+            $.ajax({
+                url : 'ajax/newSpace',
+                method : 'POST',
+                success : function(data) {
+                    alertMessage(data);
+                    var html = Handlebars.templates["spaceLink"](context);
+                    $("#spaceList").append(html);
+                },
+                error: alertError,
+                data : context
+
+            });
+            return false;
+        })
+
+    })
+</script>

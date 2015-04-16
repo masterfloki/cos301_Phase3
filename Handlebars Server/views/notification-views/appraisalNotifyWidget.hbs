@@ -1,0 +1,40 @@
+<script>
+    var url = "ajax/addNotification";
+    function followAppraisal() {
+        var $appraisalName = $('#appraisalName');
+        if (!isEmpty($appraisalName.value))
+            $.ajax({
+                url : url,
+                method: 'POST',
+                data: {
+                    action: 'followAppraisal',
+                    target: $appraisalName.value
+                },
+                success: alertMessage,
+                error: alertError
+            });
+    }
+
+    function unfollowAppraisal() {
+        var $appraisalName = $('#appraisalName');
+        if (!isEmpty($appraisalName.value))
+            $.ajax({
+                url : url,
+                method: 'POST',
+                data: {
+                    action: 'unfollowAppraisal',
+                    target: $appraisalName.value
+                },
+                success: alertMessage,
+                error: alertError
+            });
+    }
+</script>
+<div class="container-fluid">
+    <form name="appraisals" id="appraisals">
+        <h3>Register to follow appraisals</h3>
+        <input class="form-control" type="text" name="appraisalName" id="appraisalName" placeholder="eg. funny"><br>
+        <button class="btn btn-primary" onclick="followAppraisal()">Follow Appraisal</button>
+        <button class="btn btn-primary" onclick="unfollowAppraisal()">Unfollow Appraisal</button>
+    </form>
+</div>

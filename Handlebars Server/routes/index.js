@@ -1,27 +1,67 @@
+
+
 /**
- * @param database
- * @param resources
- * @param reporting
- * @returns {Router}
+ *
+ * @param database {BuzzDatabase}
+ * @param resources {resources}
+ * @param reporting {reporting}
+ * @param status {status}
+ * @param threads {threads}
+ * @param authentication {authentication}
+ * @param csds {csds}
+ * @param spaces {spaces}
+ * @param notification {notification}
+ * @returns {exports}
  */
-module.exports = function(database, resources, reporting) {
+module.exports = function(database, resources, reporting, status, threads, authentication, csds, spaces, notification) {
+    global.getSessionUserID = function (req) {
+        //TODO in production this should just be teh session part
+        if (app.get('env') === 'production') {
+            return req.session.userID;
+        }
+        ;//If not in production se default value
+        var myUid;
+        try {
+            myUid = req.session.userID | 'u00000000';
+        } catch (e) {
+            myUid = 'u00000000'
+        }
+        return myUid;
+    };
+
+    /** Register hbs partials ***/
+    var hbs = require('hbs');
+    var fs = require('fs');
+
+    var registerHbsPartials = function (dir) {
+        var filenames = fs.readdirSync(dir);
+
+        filenames.forEach(function (filename) {
+            var matches = /^([^.]+).hbs$/.exec(filename);
+            if (!matches) {
+                return;
+            }
+            var name = matches[1];
+            var template = fs.readFileSync(dir + '/' + filename, 'utf8');
+            hbs.registerPartial(name, template);
+        });
+    };
+    registerHbsPartials(__dirname + "/../views/notification-views");
+    registerHbsPartials(__dirname + "/../views/spaces-views");
+    var mongoose = database.mongoose;
     var express = require('express');
     var router = express.Router();
-    var mongoose = database.mongoose;
-
-    function getProfile(id) {
-        return {title: "user " + id};
-    }
-
-    var space = mongoose.Schema({
-        space_ID: String,
-        space_Name: String,
-        space_Description: String
+    var spaceSchema = mongoose.Schema({
+        moduleID: String,
+        isOpen: String,
+        academicYear: Number,
+        name: String,
+        adminUsers : Array
     }, {
-        collection: 'Spaces'
+        collection: 'spaces'
     });
-
-    var ThreadSchema = new mongoose.Schema({
+    var threadSchema = new mongoose.Schema({
+            thread_ID:String,
             thread_DateCreated: Date,
             thread_Name: String,
             thread_PostContent: Array,
@@ -37,42 +77,63 @@ module.exports = function(database, resources, reporting) {
         },{
             collection: 'Threads'
         });
+    var followingThread = new mongoose.Schema({
+            notification_ThreadID : String,
+            notification_StudentID : String
+    }, {
+        collection: 'Notifications_Thread'
+    });
 
-    function getThreads(id, callback) {
-        var threadModel = mongoose.model("Threads_1", ThreadSchema);
-        threadModel.find({thread_SpaceID: id}, function (err, threads) {
+
+    /**** Helper functions ****/
+
+    var getThreads = function (spaceID, myID, callback) {
+        var threadModel = mongoose.model("Routing-Threads", threadSchema);
+
+        threadModel.find({thread_SpaceID: spaceID}, function (err, threads) {
             if (err) {
             }
             else {
                 var newData = {};
-                newData.title = id;
+                newData.title = spaceID;
                 newData.threads = threads;
-                callback(newData);
+                var updateCount = 0;
+                var followModel = mongoose.model("Following-Thread", followingThread);
+                followModel.find({notification_StudentID: myID}, function (err, data) {
+                    if (!err) {
+                        var followingThreads = []
+                        data.forEach(function(entry) {
+                            followingThreads.push(entry.notification_ThreadID);
+                        });
+
+                        threads.forEach(function (entry) {
+                            entry.following = followingThreads.indexOf(entry.thread_ID) > -1;
+                        });
+
+                    }
+                    callback(newData);
+
+                });
+                //$.each(threads, function(key, value) {
+
             }
+
         });
-    }
-
-    function getSpaces(callback) {
-        var spaceModel = mongoose.model('Spaces_1', space);
-        spaceModel.find({}, function (err, spaces) {
-            if (err) {
-
-            }
-            else {
+    };
+    var getSpaces = function(callback) {
+        var spaceModel = mongoose.model('Routing-Spaces', spaceSchema);
+        spaceModel.find({isOpen: 'true'}, function (err, spaces) {
+            if (!err) {
                 callback(spaces);
             }
-
         });
-    }
+    };
 
-    /* GET home page. */
     router.get('/', function (req, res, next) {
-    //Pass to page
-        getSpaces(function (obj2) {
+        getSpaces(function (spaces) {
             var obj = {};
-            obj.spaces = obj2;
+            obj.spaces = spaces;
             obj.title = "Buzz++@UP";
-            //console.log(obj);
             res.render('index', obj);
         })
     });
@@ -83,21 +144,30 @@ module.exports = function(database, resources, reporting) {
 
     router.get('/threads', function (req, res, next) {
         var space = req.query.space;
-        getThreads(space, function (obj) {
-
-            // console.log(obj);
-            res.render('thread', obj);
+        getThreads(space, global.getSessionUserID(req), function (threads) {
+            threads.spaceID = space;
+            res.render('thread', threads);
         })
     });
 
-    //Eg use get arguments from URL
-    router.get('/testing', function (req, res, next) {
-        res.render('test', getProfile(req.query.id));
-    });
+
+
+    /******** Content Routing ****************/
+
+    var contentRouter = require('./content');
+    router = contentRouter(router, resources, reporting, status, threads);
+
+    /******** Infrastructure Routing **********/
+
+    var infrastructure = require('./infrastructure');
+    router = infrastructure(router, database, authentication, csds, spaces, notification);
+
 
    return  router;
 
 };
 
 module.exports ['@singleton'] = true;
-module.exports ['@require'] = ['buzz-database', 'buzz-resources' ,'buzz-reporting'];
+module.exports ['@require'] = ['buzz-database',
+    'buzz-resources' ,'buzz-reporting', 'buzz-status', 'buzz-threads',
+    'buzz-authentication', 'buzz-csds', 'buzz-spaces', 'buzz-notification'];

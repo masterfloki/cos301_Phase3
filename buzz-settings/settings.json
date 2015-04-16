@@ -1,0 +1,27 @@
+{
+  "port": 3000,
+  "database": "mongodb://makerspace.up.ac.za/Buzz",
+  "killTimeout": 500,
+  "email": {
+    "address": "301emailtest@gmail.com",
+    "password": "new301testemail"
+  },
+  "csds": {
+    "base": "ou=Computer Science,o=University of Pretoria,c=ZA",
+    "url": "ldap://reaper.up.ac.za"
+  },
+  "notification": {
+    "subjectRegistration": "Successful registration.",
+    "messageRegistration": "You have been registered to a thread.",
+    "subjectDeregistration": "Successful registration.",
+    "messageDeregistration": "You have been deregistered from a thread.",
+    "subjectNewPost": "A new post.",
+    "messageNewPost": "A new post has happened.",
+    "subjectDeletedThread": "Thread deleted.",
+    "messageDeletedThread": "The thread you are following has been deleted.",
+    "subjectMovedThread": "Moved thread.",
+    "messageMovedThread": "This thread has been moved.",
+    "subjectNewAppraisal": "A New Appraisal",
+    "messageNewAppraisal": "You have a new appraisal"
+  }
+}

@@ -4,14 +4,33 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var scribe = require('scribe-js')();
 var IoC = require('electrolyte');
-
 var express = require('express');
+
+try {
+  global.settings = require("./settings.json");
+}
+catch(err) {
+  console.log("No ./settings.json exist. Loading Default...");
+}
 
 var app = express();
 module.exports = app;
 global.app = app;
 
 IoC.loader(IoC.node( __dirname + "/node_modules"));
+
+var session = require('express-session');
+var sessionStore = require('session-file-store')(session);
+var secretString = (Math.random() + 1).toString(36).substring(10);
+
+app.use(session({
+    store: new sessionStore(),
+    secret: secretString,
+    rolling: true,
+    cookie : { path: '/', httpOnly: true, secure: false, maxAge: 3600000 },
+    resave: false,
+    saveUninitialized: false
+}));
 
 /**
  * Set up the routing, interceptors, settings and commands.
@@ -32,8 +51,6 @@ var i18n = new (require('i18n-2'))({
  locales: ['en']
  });
 
-
-
 //var connection = IoC.create('database'); //Initial connection to the database
 
 // view engine setup
@@ -49,14 +66,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', app.routes);
 
+// error handlers
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
-// error handlers
 
 // development error handler
 // will print stacktrace
@@ -79,4 +95,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-

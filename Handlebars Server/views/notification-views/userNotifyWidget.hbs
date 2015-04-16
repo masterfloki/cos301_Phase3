@@ -1,0 +1,55 @@
+<script>
+    var url = "ajax/addNotification";
+    var profile = "{{profileID}}";
+
+    $(function() {
+        var fol = Boolean({{following}});
+        if (fol) {
+            $("#follow-" + profile).hide().click(followUser);
+        } else {
+            $("#unfollow-" + profile).hide().click(unfollowUser);
+        }
+
+    });
+
+    function followUser() {
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                action: 'followUser',
+                target: profile
+            },
+            success: function(data) {
+                alertMessage(data);
+                $("#follow-" + profile).hide();
+                $("#unfollow-" + profile).show();
+            },
+            error: alertError
+
+        });
+    }
+
+    function unfollowUser() {
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                action: 'unfollowThread',
+                target: profile
+            },
+            success: function(data) {
+                alertMessage(data);
+                $("#unfollow-" + profile).hide();
+                $("#follow-" + profile).show();
+            },
+            error: alertError
+
+        });
+    }
+
+</script>
+<div class="container-fluid">
+    <button class="btn btn-primary" id="unfollow-{{profileID}}">Unfollow</button>
+    <button class="btn btn-primary" id="follow-{{profileID}}">Follow</button>
+</div>
