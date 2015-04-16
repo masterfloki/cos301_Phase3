@@ -19,7 +19,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
         if (app.get('env') === 'production') {
             return req.session.userID;
         }
-        ;//If not in production se defaulkt value
+        ;//If not in production se default value
         var myUid;
         try {
             myUid = req.session.userID | 'u00000000';
@@ -47,7 +47,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
         });
     };
     registerHbsPartials(__dirname + "/../views/notification-views");
-
+    registerHbsPartials(__dirname + "/../views/spaces-views");
     var mongoose = database.mongoose;
     var express = require('express');
     var router = express.Router();

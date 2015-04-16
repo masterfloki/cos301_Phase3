@@ -1,10 +1,9 @@
 <h2>Welcome to {{title}}</h2>
 <h3>Threads in this space</h3>
 {{#each this.threads}}
-<div id="Thread-{{this.thread_ID}}">
-      <p>Title: {{this.thread_Name}}</p>
+<div class="container-fluid" id="Thread-{{this.thread_ID}}">
+    <p>Title: {{this.thread_Name}}</p>
     <p style="background-color:grey">{{this.thread_PostContent}}</p>
     {{> threadNotifyWidget}}
-
 </div>
 {{/each}}

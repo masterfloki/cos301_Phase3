@@ -44,32 +44,43 @@ module.exports = function (router, database, authentication, csds, spaces, notif
      * Handles login based on username and password.
      * @param username {String}
      * @param password {String}
-     * @param result
+     * @param res res from calling middleware
+     * @param req
+     * @param [lastPage] {String} URL of page that needs to be opened after login request
      */
-    function Login(username, password, result, req, lastPage) {//how is lastPage passed through????
-        csds.login(username, password, function (res) {
-            if (res === true) {
-                //FindUserModules(username, password);
-                //GetUserRolesForModules(obj.usmemberID);
-                //TODO Create session and store username in it
-                var session = req.session;
-                session.userId = username;//this is assuming we only log in with our userids which are our student numbers
-                if (lastPage) {
-                    result.redirect(lastPage);
-                } else {
-                    result.redirect("/");
-                }
+    function Login(username, password, req, res, lastPage) {
+        if (app.get('env') !== 'production' && username == 'u12345678') {
+            var session = req.session;
+            session.userId = username;//this is assuming we only log in with our userids which are our student numbers
+            if (lastPage) {
+                res.redirect(lastPage);
+            } else {
+                res.redirect("/");
             }
-            else {
-                var loginPage = './csds-views/login';
-                result.render(loginPage, {message: 'Failed to login', messageType: 'danger'});
-            }
-        });
-    }
+        } else {
+            csds.login(username, password, function (data) {
+                if (data === true) {
+                    //FindUserModules(username, password);
+                    //GetUserRolesForModules(obj.usmemberID);
 
-    router.get('/createSpace', function (req, res, next) {
-        res.render('./spaces-views/createSpace', {"title": "Create Space"});
-    });
+                    var session = req.session;
+                    session.userId = username;//this is assuming we only log in with our userids which are our student numbers
+                    if (lastPage) {
+                        res.redirect(lastPage);
+                    } else {
+                        res.redirect("/");
+                    }
+                }
+                else {
+
+                    res.redirect('/login?' + querystring.stringify({
+                        message: 'Failed to login',
+                        messageType: 'danger'
+                    }));
+                }
+            });
+        }
+    }
 
     router.get('/closeSpace', function (req, res, next) {
         res.render('./spaces-views/closeSpace');
@@ -83,29 +94,26 @@ module.exports = function (router, database, authentication, csds, spaces, notif
         res.render('./spaces-views/adminManagement');
     });
 
-    router.post('/newSpace', function (req, res, next) {
+    router.post('/ajax/newSpace', function (req, res, next) {
         var obj = {};
         /**
          * Body of POST request
-         * @type {{moduleID : String, moduleName : String}}
+         * @type {{moduleID : String, moduleName : String, academicYear : number}}
          */
         var request = req.body;
-        obj.academicYear = request.moduleID[0];
+        var myId = global.getSessionUserID(req);
+        obj.academicYear = request.academicYear;
         obj.isOpen = true;
         obj.moduleID = request.moduleID;
         obj.name = request.moduleName;
-        //TODO add user from session here.
-        obj.adminUsers = [];
+
+        obj.adminUsers = [myId];
 
         var result = spaces.createBuzzSpace(obj);
 
-        res.render('./spaces-views/createSpace', {message: result});
+        res.send(result);
     });
 
-    //TODO Remove after testing
-    router.get('/notify', function (req, res, next) {
-        res.render('./notification-views/threadNotifyWidget', {"message" : req.query.message, 'messageType':req.query.messageType});
-    });
     router.post('/ajax/addNotification', function (req, res, next) {
         /**
          * @type {{action : string, target : string}}
@@ -134,7 +142,7 @@ module.exports = function (router, database, authentication, csds, spaces, notif
                 notification.appraisalDeregister({appraisalType:data.target, studentID:myId});
                 break;
             default:
-                console.log("unknown Action");
+                console.log("unknown Action " + data.action + " by " + myId);
         }
 
         res.status(200).send({message:myId + '\'s  notification settings has been changed.'});
@@ -231,19 +239,26 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
 
     router.get('/login', function (req, res, next) {
-        res.render('./csds-views/login');
+
+        var context = {title:"login"};
+        if (req.query) {
+            context.lastPage = req.query.from;
+            context.message = req.query.message;
+            context.messageType = req.query.messageType;
+        }
+        res.render('./csds-views/login', context);
     });
 
-    router.get('logout', function(req, res, next) {
+    router.get('/logout', function(req, res, next) {
         var session = req.session;
         if(session !== null)
         {
-            res.render('./csds-views/login' ,{'message': 'You have been logged out of the system.', 'message-type':'notify'});
+            res.redirect('/login?' + querystring.stringify({'message': 'You have been logged out of the system.', 'messageType':'notify'}));
             session.destroy();
         }
         else
         {
-            res.render('./csds-views/login');
+            res.redirect('/login')
         }
 
     });
@@ -251,12 +266,12 @@ module.exports = function (router, database, authentication, csds, spaces, notif
 
     router.post('/submitCSDS',  function (req, res, next) {
         /**
-         * @typedef {{csUsername : String, csPassword : String}} LoginRequest
+         * @typedef {{csUsername : String, csPassword : String, lastPage : String}} LoginRequest
          * @type {LoginRequest}
          */
         var request = req.body;
 
-        Login(request.csUsername, request.csPassword, res, req);
+        Login(request.csUsername, request.csPassword, req, res, request.lastPage);
     });
 
 

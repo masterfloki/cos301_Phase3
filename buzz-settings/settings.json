@@ -1,6 +1,6 @@
 {
   "port": 3000,
-  "database": "mongodb://45.55.154.156:27017/Buzz",
+  "database": "mongodb://makerspace.up.ac.za/Buzz",
   "killTimeout": 500,
   "email": {
     "address": "301emailtest@gmail.com",
