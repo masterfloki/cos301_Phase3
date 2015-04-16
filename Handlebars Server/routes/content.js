@@ -81,6 +81,41 @@ module.exports = function(router, resources, reporting, status, threads){
 
     });
 
+    router.get('/report', function(req, res, next){
+        res.render('./reporting-views/reports');
+    });
+
+    router.post('/downloadreport',function(req, res, next){
+        console.log('grghrogrhgorighg');
+        //res.render('blank');
+        console.log("this is the: " + req.body.reportType);
+        var reportType = req.body.reportType;
+        switch(reportType)
+        {
+            case 'students':
+                console.log('students');
+                var subTypeStudent = req.body.subTypeStudent;
+                reporting.getStudents(res);
+                break;
+            case 'lecturers':
+                console.log('lecturers');
+                var subTypeLecturers = req.body.subTypeLecturers;
+                break;
+            case 'threads':
+                console.log('threads');
+                var subTypeThreads = req.body.subTypeThreads;
+                break;
+            default:
+
+                break;    
+        }
+
+
+
+
+    });
+
+
 
     return router;
 };
