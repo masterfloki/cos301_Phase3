@@ -25,8 +25,32 @@ var request = require('supertest')
 
     it('respond with plain text', function(done){
       request(app)
-        .get('/testing')
+        .get('/createSpace')
         .expect(200, done);
+    });
+
+    it('respond with plain text', function(done){
+      request(app)
+        .post('/newSpace',{"moduleID":"asdf","moduleName":"asdf"})
+        .expect(200, done);
+    });
+
+    it('respond with plain text', function(done){
+      request(app)
+        .get('/createSpace')
+        .expect(404, done);
+    });
+
+    it('respond with plain text', function(done){
+      request(app)
+        .get('/createSpace')
+        .expect(404, done);
+    });
+
+    it('respond with plain text', function(done){
+      request(app)
+        .get('/createSpace')
+        .expect(404, done);
     });
 
   });
