@@ -140,7 +140,12 @@ module.exports = function(database, resources, reporting, status, threads, authe
         })
     });
 
-    router.get('/blank', function (req, res, nect) {
+    router.get('/contributors', function(req, res, next){
+        console.log("Works");
+        res.render('contribution', {title:'COS301 Team A'});
+    });
+
+    router.get('/blank', function (req, res, next) {
         res.render('blank', {title: "Content Unavailable"});
     });
 
@@ -151,11 +156,6 @@ module.exports = function(database, resources, reporting, status, threads, authe
             res.render('thread', threads);
         })
     });
-
-
-    router.get('/contributors'), function(req, res, next) {
-        res.render('contribution', {title:'COS301 Team A'});
-    };
 
 
 
