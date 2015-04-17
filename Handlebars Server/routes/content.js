@@ -2,7 +2,7 @@
  * Created by Paul Engelke (13093500) on 2015/04/10.
  * Adapted by Renette Ros for Top-Level Demo.
  */
-
+var querystring = require('querystring');
 /**
  * Appends Content routing to router
  * @param router {exports} A Router object
@@ -34,10 +34,12 @@ module.exports = function(router, database, resources, reporting, status, thread
                    con.size_limit = (con.size_limit/(1024*1024)).toFixed(3);
                 });
 
-                var object = {};
-                object.title = "Constraint Management";
-                object.constraints = results;
-                res.render('resources-views/file-constraints', object);
+                var context = {};
+                context.title = "Constraint Management";
+                context.constraints = results;
+                context.message = req.query.message;
+                context.messageType = req.query.messageType;
+                res.render('resources-views/file-constraints', context);
             }
         });
     });
@@ -160,5 +162,40 @@ module.exports = function(router, database, resources, reporting, status, thread
         res.render('./status-views/addAppraisalType');
     });
 
-    return router;
-};
+    router.post('/updateConstraint', function(req, res) {
+
+        resources.updateConstraint(req.body["mime-type"], req.body["size-limit"] * req.body['size-unit'], function (success) {
+            if (!success) {
+
+                res.redirect('/file-constraint?' + querystring.stringify( {
+                    message: "Constraint could not be updated.",
+                    error: {}
+                }));
+            } else {
+                res.redirect('file-constraints');
+            }
+        });
+
+        var renderConstraints = function (res, err, results) {
+
+            if (err) {
+
+                res.render('error', {
+                    message: "No data could be retrieved",
+                    error: err
+                });
+            } else {
+
+                results.forEach(function (con) { // set unit to MB
+                    con.mb_size = (con.size_limit / (1024 * 1024)).toFixed(3);
+                });
+
+                var object = {};
+                object.title = "Constraint Management";
+                object.constraints = results;
+                res.render('content/manageConstraints', object);
+            }
+        };
+    });
+            return router;
+}
