@@ -77,10 +77,6 @@ module.exports = function(router, database, resources, reporting, status, thread
     });
 
 
-    router.post('/submitPost', function(req, res, next){
-
-
-    });
 
     var mongoose = database.mongoose;
     var spaceSchema = mongoose.Schema({
@@ -157,14 +153,25 @@ module.exports = function(router, database, resources, reporting, status, thread
 
     });
 
-    router.get('/addAppraisalType',function(req, res, next){
+    router.get('/appraisal',function(req, res, next){
         var context = {title:"Add Appraisal"};
         context.message = req.query.message;
         context.messageType = req.query.messageType;
-        res.render('./status-views/addAppraisalType', context);
+        res.render('./status-views/appraisals', context);
     });
 	
-	
+	router.post('/submitPost',function(req, res, next){
+        console.log("ye");
+        var content = req.body.content;
+        var parent = req.body.parentId;
+        var space = req.body.spaceId;
+        var thread = new threads.Thread(content, space, parent);
+        threads.saveThread();
+        res.redirect('threads?space=' + encodeURIComponent(space));
+    });
+
+
+
 	router.post('/submitAppraisal',function(req, res, next){
 		var appraisalName = req.body.appraisal_name;
 		var appraisalDescription = req.body.appraisal_description;
@@ -191,11 +198,11 @@ module.exports = function(router, database, resources, reporting, status, thread
             //console.log(obj.appraisalTypeID + " this is the id");
             if(obj.appraisalTypeID !== undefined)
             {
-                res.redirect("/addAppraisalType?"+ qstring.stringify({message:"Appraisal Added", messageType:"success"}));
+                res.redirect("/appraisal?"+ qstring.stringify({message:"Appraisal Added", messageType:"success"}));
             }
             else
             {
-                res.redirect("/addAppraisalType?"+ qstring.stringify({message:"Appraisal Added", messageType:"danger"}));
+                res.redirect("/appraisal?"+ qstring.stringify({message:"Appraisal Added", messageType:"danger"}));
             }
 
         };
@@ -205,6 +212,8 @@ module.exports = function(router, database, resources, reporting, status, thread
 		//console.log(req.body);
 
 	});
+
+
 
 
     return router;

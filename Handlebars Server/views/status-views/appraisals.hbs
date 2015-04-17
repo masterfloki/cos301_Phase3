@@ -1,0 +1,14 @@
+<script>
+    $(document).ready(function(){
+        $('#addAppraisalType').hide();
+    });
+    function showHideAddAppraisalType(){
+        $('#addAppraisalType').toggle();
+    };
+</script>
+<div>
+    <button class="btn" onclick="showHideAddAppraisalType();">Add Appraisal Type</button>
+    <div id="addAppraisalType">
+        {{>addAppraisalType}}
+    </div>
+</div>

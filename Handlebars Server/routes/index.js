@@ -47,6 +47,8 @@ module.exports = function(database, resources, reporting, status, threads, authe
         });
     };
     registerHbsPartials(__dirname + "/../views/notification-views");
+    registerHbsPartials(__dirname + "/../views/status-views");
+
     registerHbsPartials(__dirname + "/../views/spaces-views");
     var mongoose = database.mongoose;
     var express = require('express');
