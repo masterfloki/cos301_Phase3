@@ -151,6 +151,11 @@ module.exports = function(database, resources, reporting, status, threads, authe
     });
 
 
+    router.get('/contributors'), function(req, res, next) {
+        res.render('contribution', {title:'COS301 Team A'});
+    };
+
+
 
     /******** Content Routing ****************/
 
