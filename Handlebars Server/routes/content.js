@@ -156,7 +156,9 @@ module.exports = function(router, database, resources, reporting, status, thread
 
     });
 
-
+    router.get('/addAppraisalType',function(req, res, next){
+        res.render('./status-views/addAppraisalType');
+    });
 
     return router;
 };
