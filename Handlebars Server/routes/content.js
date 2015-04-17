@@ -12,6 +12,7 @@ var querystring = require('querystring');
  * @param threads Buzz-Threads Module
  * @returns {exports} The router object with handlers appended
  */
+var qstring = require('querystring');
 module.exports = function(router, database, resources, reporting, status, threads){
 
     var bodyparser = require('body-parser');
@@ -159,8 +160,54 @@ module.exports = function(router, database, resources, reporting, status, thread
     });
 
     router.get('/addAppraisalType',function(req, res, next){
-        res.render('./status-views/addAppraisalType');
+        var context = {title:"Add Appraisal"};
+        context.message = req.query.message;
+        context.messageType = req.query.messageType;
+        res.render('./status-views/addAppraisalType', context);
     });
+	
+	
+	router.post('/submitAppraisal',function(req, res, next){
+		var appraisalName = req.body.appraisal_name;
+		var appraisalDescription = req.body.appraisal_description;
+        var appraisalLevels = [];
+		for(i = 1; true; i++)
+        {
+            var nameLevel = "appraisal_name_level_" + i.toString();
+            var ratingLevel = "appraisal_reporting_level_" + i.toString();
+            if(req.body[nameLevel] === undefined)
+            {
+                break;
+            }
+            //console.log('this is it: ' + req.body[nameLevel]);
+            var appraisalLevel = new status.AppraisalLevel(nameLevel, ratingLevel, "null");
+            //appraisalLevel.name = nameLevel;
+            appraisalLevels.push(appraisalLevel);
+        }
+        var appraisalType = new status.AppraisalType(appraisalName, appraisalDescription, "null", appraisalLevels);
+
+        var randomObject = {};
+        randomObject.appraisalType = appraisalType;
+        function checkIfSuccess(obj)
+        {
+            //console.log(obj.appraisalTypeID + " this is the id");
+            if(obj.appraisalTypeID !== undefined)
+            {
+                res.redirect("/addAppraisalType?"+ qstring.stringify({message:"Appraisal Added", messageType:"success"}));
+            }
+            else
+            {
+                res.redirect("/addAppraisalType?"+ qstring.stringify({message:"Appraisal Added", messageType:"danger"}));
+            }
+
+        };
+
+        status.createAppraisalType(randomObject, checkIfSuccess);
+		
+		//console.log(req.body);
+
+	});
+
 
     router.post('/updateConstraint', function(req, res) {
 
