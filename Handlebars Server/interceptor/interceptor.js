@@ -24,7 +24,7 @@ exports = module.exports = function(database, csds, threads, spaces, notificatio
     listOfServicesForAuth.push({domain:resources, service:'submitPost'});
     listOfServicesForAuth.push({domain:status, service:'assignAppraisalToPost'});
     listOfServicesForAuth.push({domain:status, service:'setStatusCalculator'});
-    listOfServicesForAuth.push({domain:status, service:'createAppraisalType'});
+    //listOfServicesForAuth.push({domain:status, service:'createAppraisalType'});
     listOfServicesForAuth.push({domain:status, service:'removeAppraisalType'});
     listOfServicesForAuth.push({domain:status, service:'assignAppraisalTypeToBuzzSpace'});
     listOfServicesForAuth.push({domain:spaces, service:'closeBuzzSpace'});

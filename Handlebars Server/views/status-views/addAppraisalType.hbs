@@ -8,57 +8,58 @@
                 "<td><input type='number' name='appraisal_rating_level_" + levelCount + "' value='"+ levelCount +"'></td>" +
                 "<td><input type='file' name='appraisal_icon_level_" + levelCount + "'></td>" +
                 "</tr>";*/
-        var string = '<div class="form-group">Level ' + levelCount +
+        var string = '<div class="form-group"><h3>Level ' + levelCount + '</h3>' + 
                             '<div class="form-group">'+
-                                '<label for="appraisalNameLevel' + levelCount + '">Appraisal Level Descriptor:</label><input class="form-control" type="text" id="appraisalNameLevel' + levelCount + '" name="appraisal_name_level_' + levelCount + '">'+
+                                '<label for="appraisalNameLevel' + levelCount + '">Appraisal Level Descriptor:</label><input required class="form-control" type="text" id="appraisalNameLevel' + levelCount + '" name="appraisal_name_level_' + levelCount + '">'+
                             '</div >'+
                             '<div class="form-group">'+
-                                '<label for="appraisalRatingLevel' + levelCount + '">Appraisal Rating:</label><input class="form-control" value="' + levelCount + '" type="number" id="appraisalRatingLevel' + levelCount + '" name="appraisal_rating_level_' + levelCount + '">'+
+                                '<label for="appraisalRatingLevel' + levelCount + '">Appraisal Rating:</label><input required class="form-control" value="' + levelCount + '" type="number" id="appraisalRatingLevel' + levelCount + '" name="appraisal_rating_level_' + levelCount + '">'+
                             '</div>'+
-                            '<label for="appraisalIconLevel' + levelCount + '">Appraisal Icon:</label>' +
+                            '<!--<label for="appraisalIconLevel' + levelCount + '">Appraisal Icon:</label>' +
                             '<div class="btn btn-default btn-file">'+
                                 '<input type="file" id="appraisalIconLevel' + levelCount + '" name="appraisal_icon_level_' + levelCount + '">'+
-                            '</div>'+
+                            '</div>-->'+
                         '</div>';
         $('#appraisal_levels').append(string);
         ++levelCount;
         return false;
     }
 </script>
-<form method="post" action="submitAppraisal" enctype="multipart/form-data">
+<h2>Add Appraisal Type</h2>
+<form method="post" action="submitAppraisal">
 
 
     <div class="form-group">
         <div class="form-group">
-            <label for="appraisalName">Appraisal Name:</label><input class="form-control" id="appraisalName" type="text" name="appraisal_name">
+            <label for="appraisalName">Appraisal Name:</label><input required class="form-control" id="appraisalName" type="text" name="appraisal_name">
         </div>
         <div class="form-group">
-            <label for="appraisalDescription">Appraisal Description:</label><input class="form-control" id="appraisalDescription" type="text" name="appraisal_description">
+            <label for="appraisalDescription">Appraisal Description:</label><input required class="form-control" id="appraisalDescription" type="text" name="appraisal_description">
         </div>
-        <div class="form-group">
-            <label for="appraisalIconDefault">Default Appraisal Icon:</label>
-            <div class="btn btn-default btn-file">
-                 <input id="appraisalIconDefault" type="file" name="appraisal_icon_default">
-            </div>
+        <!--   <div class="form-group">
+               <label for="appraisalIconDefault">Default Appraisal Icon:</label>
+               <div class="btn btn-default btn-file">
+                    <input id="appraisalIconDefault" type="file" name="appraisal_icon_default">
+               </div>
 
-        </div>
-    </div>
+           </div>-->
+       </div>
 
-            <!--Appraisal Type Levels-->
+               <!--Appraisal Type Levels-->
     <div class="form-group">
         <div class="form-group" id="appraisal_levels">
-            <div class="form-group">Level 1
+            <div class="form-group"><h3>Level 1</h3>
                     <div class="form-group">
 
-                        <label for="appraisalNameLevel1">Appraisal Level Descriptor:</label><input class="form-control" type="text" id="appraisalNameLevel1" name="appraisal_name_level_1">
+                        <label for="appraisalNameLevel1">Appraisal Level Descriptor:</label><input required class="form-control" type="text" id="appraisalNameLevel1" name="appraisal_name_level_1">
                     </div >
                     <div class="form-group">
-                        <label for="appraisalRatingLevel1">Appraisal Rating:</label><input class="form-control" value="1" type="number" id="appraisalRatingLevel1" name="appraisal_rating_level_1">
+                        <label for="appraisalRatingLevel1">Appraisal Rating:</label><input required class="form-control" value="1" type="number" id="appraisalRatingLevel1" name="appraisal_rating_level_1">
                     </div>
-                    <label for="appraisalIconLevel1">Appraisal Icon:</label>
+          <!--          <label for="appraisalIconLevel1">Appraisal Icon:</label>
                     <div class="btn btn-default btn-file">
                         <input type="file" id="appraisalIconLevel1" name="appraisal_icon_level_1">
-                    </div>
+                    </div>-->
 
             </div>
 
