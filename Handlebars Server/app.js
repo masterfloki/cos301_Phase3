@@ -4,8 +4,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var scribe = require('scribe-js')();
 var IoC = require('electrolyte');
-
 var express = require('express');
+
+try {
+  global.settings = require("./settings.json");
+}
+catch(err) {
+  console.log("No ./settings.json exist. Loading Default...");
+}
 
 var app = express();
 module.exports = app;
@@ -17,7 +23,6 @@ var session = require('express-session');
 var sessionStore = require('session-file-store')(session);
 var secretString = (Math.random() + 1).toString(36).substring(10);
 
-
 app.use(session({
     store: new sessionStore(),
     secret: secretString,
@@ -26,7 +31,6 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-
 
 /**
  * Set up the routing, interceptors, settings and commands.
@@ -91,5 +95,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-

@@ -1,8 +1,10 @@
-<h1>Resource Constraints</h1>
-<h2>Existing Constraints</h2>
+<!-- TODO Add options to update -->
+<!-- TODO Add manageResources options -->
+<h2>Resource Constraints</h2>
+<h3>Existing Constraints</h3>
 <div class="container">
     <table class="table" id="resource-constraints">
-        <thead><tr><th>#</th><th>Mime Type</th><th>Size Limit</th></tr></thead>
+        <thead><tr><th>#</th><th>Mime Type</th><th>Size Limit</th><th></th></tr></thead>
         <tbody>
         {{#each this.constraints}}
             <tr>
@@ -18,7 +20,7 @@
     </table>
 </div>
 
-<h2>Add new Constraint</h2>
+<h3>Add new Constraint</h3>
 <form id="addForm" action="/submitConstraint" method="post">
     <div class="form-group">
         <label for="mime-type" >Mime Type</label>
@@ -27,8 +29,8 @@
     <div class="form-group" >
         <label for="size-limit" >File Size Limit</label>
         <div class="form-inline">
-            <input id="size-limit"  required type="number" name="size-limit" class="form-control" >
-            <select name="size-unit" id="size-unit">
+            <input id="size-limit" min="0" required type="number" name="size-limit" class="form-control" >
+            <select name="size-unit" id="size-unit" class="form-control">
                 <option value="1">Bytes</option>
                 <option value="1024">KB</option>
                 <option value="1048576">MB</option>

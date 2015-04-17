@@ -1,38 +1,37 @@
+<!-- TODO use Ajax -->
 <h2>Manage {{spaceID}}</h2>
-<form id="addAdmin">
+<form id = "closeSpace" action="/submitRS" method="post">
+    <input type="hidden" value="{{spaceID}}" id="RSmodule" name="RSmodule">
+    <input type="submit" class="btn btn-primary" value="Close Space">
+</form>
+
+<form id="addAdmin" class="form-inline">
     <h3>Add admin</h3>
-    <label for="AAid">User ID</label>
-    <input type="text" id="AAid" name="AAid">
-    <input type="hidden" value="{{spaceID}}" id="Aadmin" name="Aadmin">
-    <input type="submit" value="Add Admin">
+    <input class="form-control" type="text" id="AAid" name="AAid" placeholder="userID">
+    <input class="form-control" type="hidden" value="{{spaceID}}" id="Aadmin" name="Aadmin">
+    <input type="submit" class="btn btn-primary" value="Add Admin">
 </form>
 
-<form id="removeAdmin" action="/submitRAM" method="post">
-    <h3> Remove Admin</h3>
-    <label for="RSid">User ID</label>
-    <input type="text" id="RSid" name="RSid">
-    <input type="hidden" value="{{spaceID}}" id="RAid" name="RAid">
-    <input type="submit" value="Remove Admin">
+<form id="removeAdmin" action="/submitRAM" method="post" class="form-inline">
+    <h3>Remove Admin</h3>
+    <input class="form-control" type="text" id="RSid" name="RSid" placeholder="userID">
+    <input class="form-control" type="hidden" value="{{spaceID}}" id="RAid" name="RAid">
+    <input type="submit" class="btn btn-primary" value="Remove Admin">
 </form>
 
-<form id = "addForm" action="/submitRU" method="post">
-<h3>Register User on Buzz Space</h3>
-            <td>Buzz Space User Name: </td>
+<form id="addForm" action="/submitRU" method="post">
+    <h3>Register User on Buzz Space</h3>
+    <label for="RUuserName">Buzz Space User Name</label>
+    <input class="form-control" type="text" id="RUuserName" name="RUuserName">
 
-                <input type="textbox" id="RUuserName" name="RUuserName">
-            <td class="headerNames">Signature: </td>
-            <td>
-                <input type="textbox" id="RUsignature" name="RUsignature">
-            </td>
-            <td class="headerNames">User ID: </td>
-            <td>
-                <input type="textbox" id="RUuserid" name="RUuserid">
-            <td>Module ID: </td>
-            <td>
-                <input type="textbox" id="RUmoduleid" name="RUmoduleid">
-            </td>
-            <td>
-                <input type="Submit" value="Create User">
-            </td>
+    <label for="RUsignature">Signature </label>
+    <input class="form-control" type="text" id="RUsignature" name="RUsignature">
+
+    <label for="RUuserid">User ID</label>
+    <input class="form-control" type="text" id="RUuserid" name="RUuserid">
+
+    <input class="form-control" type="hidden" value="{{spaceID}}" id="RUmoduleid" name="RUmoduleid">
+
+    <input type="submit" class="btn btn-primary" value="Create User">
 
 </form>

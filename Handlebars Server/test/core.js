@@ -32,7 +32,7 @@ var request = require('supertest')
     it('respond with plain text', function(done){
       request(app)
         .post('/newSpace',{"moduleID":"asdf","moduleName":"asdf"})
-        .expect(200, done);
+        .expect(401, done);
     });
 
     it('respond with plain text', function(done){

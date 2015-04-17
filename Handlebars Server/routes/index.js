@@ -160,7 +160,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
     /******** Content Routing ****************/
 
     var contentRouter = require('./content');
-    router = contentRouter(router, resources, reporting, status, threads);
+    router = contentRouter(router, database, resources, reporting, status, threads);
 
     /******** Infrastructure Routing **********/
 
