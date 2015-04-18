@@ -1,11 +1,10 @@
 {
-  "name": "Buzz",
-  "version": "0.1.0",
+  "name": "buzz-app",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test" : "node ./node_modules/mocha/bin/mocha"
-
+    "test": "node ./node_modules/mocha/bin/mocha"
   },
   "dependencies": {
     "body-parser": "~1.12.0",
@@ -20,26 +19,18 @@
     "buzz-spaces": "^1.0.0",
     "buzz-status": "^1.0.0",
     "buzz-threads": ">=0.0.1",
-
-    "buzz-commands": "^0.x.x",
-    "body-parser": "~1.12.0",
     "cookie-parser": "~1.3.4",
     "debug": "~2.1.1",
     "electrolyte": "~0",
     "express": "~4.12.2",
-    "express-session": "^1.11.1",
+    "express-session": "~1.11.1",
     "hbs": "~2.9.0",
     "i18n-2": "^0.4.6",
     "json2csv": "^2.2.1",
     "node-aop": "^0.1.0",
     "scribe-js": "^2.0.4",
     "serve-favicon": "~2.2.0",
-    "express-session": "~1.11.1"
-  },
-  "optionalDependencies": {
-    "database": ">=1.0.0",
     "session-file-store": "0.0.3"
-
   },
   "devDependencies": {
     "unit.js": "^1.1.3",
