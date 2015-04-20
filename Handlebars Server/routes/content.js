@@ -12,7 +12,8 @@
  * @param threads Buzz-Threads Module
  * @returns {exports} The router object with handlers appended
  */
-module.exports = function(router, resources, reporting, status, threads){
+var qstring = require('querystring');
+module.exports = function(router, database, resources, reporting, status, threads){
 
     var bodyparser = require('body-parser');
     var urlencodedparser = bodyparser.urlencoded({extended:false});
@@ -76,30 +77,72 @@ module.exports = function(router, resources, reporting, status, threads){
     });
 
 
-    router.post('/submitPost', function(req, res, next){
 
-
+    var mongoose = database.mongoose;
+    var spaceSchema = mongoose.Schema({
+        moduleID: String,
+        isOpen: String,
+        academicYear: Number,
+        name: String,
+        adminUsers : Array
+        }, {
+        collection: 'spaces'
     });
+
+    var getSpaces = function(callback) {
+        var spaceModel = mongoose.model('Reporting-Spaces', spaceSchema);
+        spaceModel.find({isOpen: 'true'}, function (err, spaces) {
+            if (!err) {
+                callback(spaces);
+            }
+        });
+    };
 
     router.get('/report', function(req, res, next){
-        res.render('./reporting-views/reports', {title:"Reports"});
+        getSpaces(function (spaces) {
+            var obj = {};
+            obj.spaces = spaces;
+            obj.title = 'Reports';
+            res.render('./reporting-views/reports', obj);
+        })
+
     });
 
+
+
+
+
+
+
+
     router.post('/downloadreport',function(req, res, next){
+
         var reportType = req.body.reportType;
         switch(reportType)
         {
-            case 'students':
+            case 'subTypeStudent':
                 var subTypeStudent = req.body.subTypeStudent;
                 reporting.getStudents(res);
                 break;
-            case 'lecturers':
+            case 'subTypeLecturers':
                 var subTypeLecturers = req.body.subTypeLecturers;
                 reporting.getLecturers(res);
                 break;
-            case 'threads':
+            case 'subTypeThreads':
                 var subTypeThreads = req.body.subTypeThreads;
-                reporting.getThreads(res);
+                switch(subTypeThreads)
+                {
+                    case 'allThreads':
+                        reporting.getThreads(res);
+                        break;
+                    case 'spaceThreads':
+                        var course = req.body.spacesSelect;
+                        reporting.getThreadsBy(course,res);
+                        break;
+                    default:
+                        break;
+                }
+
                 break;
             default:
                 break;    
@@ -109,6 +152,67 @@ module.exports = function(router, resources, reporting, status, threads){
 
 
     });
+
+    router.get('/appraisal',function(req, res, next){
+        var context = {title:"Add Appraisal"};
+        context.message = req.query.message;
+        context.messageType = req.query.messageType;
+        res.render('./status-views/appraisals', context);
+    });
+	
+	router.post('/submitPost',function(req, res, next){
+        console.log("ye");
+        var content = req.body.content;
+        var parent = req.body.parentId;
+        var space = req.body.spaceId;
+        var thread = new threads.Thread(content, space, parent);
+        threads.saveThread();
+        res.redirect('threads?space=' + encodeURIComponent(space));
+    });
+
+
+
+	router.post('/submitAppraisal',function(req, res, next){
+		var appraisalName = req.body.appraisal_name;
+		var appraisalDescription = req.body.appraisal_description;
+        var appraisalLevels = [];
+		for(i = 1; true; i++)
+        {
+            var nameLevel = "appraisal_name_level_" + i.toString();
+            var ratingLevel = "appraisal_reporting_level_" + i.toString();
+            if(req.body[nameLevel] === undefined)
+            {
+                break;
+            }
+            //console.log('this is it: ' + req.body[nameLevel]);
+            var appraisalLevel = new status.AppraisalLevel(nameLevel, ratingLevel, "null");
+            //appraisalLevel.name = nameLevel;
+            appraisalLevels.push(appraisalLevel);
+        }
+        var appraisalType = new status.AppraisalType(appraisalName, appraisalDescription, "null", appraisalLevels);
+
+        var randomObject = {};
+        randomObject.appraisalType = appraisalType;
+        function checkIfSuccess(obj)
+        {
+            //console.log(obj.appraisalTypeID + " this is the id");
+            if(obj.appraisalTypeID !== undefined)
+            {
+                res.redirect("/appraisal?"+ qstring.stringify({message:"Appraisal Added", messageType:"success"}));
+            }
+            else
+            {
+                res.redirect("/appraisal?"+ qstring.stringify({message:"Appraisal Added", messageType:"danger"}));
+            }
+
+        };
+
+        status.createAppraisalType(randomObject, checkIfSuccess);
+		
+		//console.log(req.body);
+
+	});
+
 
 
 

@@ -1,3 +1,63 @@
+<script>
+    var selected = 0;
+
+    function hideSubTypes()
+    {
+        $('#subTypeStudentDiv').hide();
+        $('#subTypeLecturersDiv').hide();
+        $('#subTypeThreadsDiv').hide();
+        $('#threadsPerSpaceDiv').hide();
+    }
+
+    $(document).ready(function(){
+        $('#threadsPerSpaceDiv').hide();
+        hideSubTypes();
+
+
+
+
+        $('#reportType').change(function(){
+            var subType = '#' + $('#reportType').val() + 'Div';
+            hideSubTypes();
+            $(subType).show();
+        });
+
+        $('#subTypeThreads').change(function(){
+            var option = $('#subTypeThreads').val();
+            if(option === 'spaceThreads')
+            {
+                $('#threadsPerSpaceDiv').show();
+            }
+            else
+            {
+                $('#threadsPerSpaceDiv').hide();
+            }
+        });
+    });
+
+    function print()
+    {
+        if(selected == '1')
+        {
+            var selectBox = document.getElementById('selectStudent');
+            var selectedSub = selectBox.options[e.selectedIndex].value;
+            window.location=""+window.location.href+selectBox;
+        }
+        else if(selected == '2')
+        {
+            var selectBox = document.getElementById('selectLecturer');
+            var selectedSub = selectBox.options[e.selectedIndex].value;
+            window.location=""+window.location.href+selectBox;
+        }
+        else if(selected == '3')
+        {
+            var selectBox = document.getElementById('selectThread');
+            var selectedSub = selectBox.options[e.selectedIndex].value;
+            window.location=""+window.location.href+selectBox;
+        }
+    }
+</script>
+
 <h2>{{title}}</h2>
 <br/>
 <hr/>
@@ -6,49 +66,54 @@
     <div class="form-group" id="reportTypeDiv">
         <label for="reportType"> Please select report category:</label>
         <select class="form-control" name="reportType" id="reportType">
-            <option value="students">Students</option>
-            <option value="lecturers">Lecturers</option>
-            <option value="threads">Threads</option>
+            <option selected disabled hidden value=''></option>
+            <option value="subTypeStudent">Students</option>
+            <option value="subTypeLecturers">Lecturers</option>
+            <option value="subTypeThreads">Threads</option>
         </select>
     </div>
 
     <!--So how this is expected to work is all these "SubType" divs will be hidden and then when
         data is selected from the reportType select box, the appropriate div will become visible.-->
- <!--   <div id="subTypeStudentDiv">
-        <label for="subTypeStudent"> Please select student report category:</label>
-        <select name="subTypeStudent" id="subTypeStudent">
+    <div class="form-group" id="subTypeStudentDiv">
+     <!--   <label for="subTypeStudent"> Please select student report category:</label>
+        <select class="form-control" name="subTypeStudent" id="subTypeStudent">
+            <option selected disabled hidden value=''></option>
             <option value="allStudents">All Students details</option>
             <option value="spaceStudents">All Students per Space</option>
-        </select>
+        </select>-->
     </div>
 
-    <div id="subTypeLecturersDiv">
-        <label for="subTypeLecturers"> Please select lecturers report category:</label>
-        <select name="subTypeLecturers" id="subTypeLecturers">
+    <div class="form-group" id="subTypeLecturersDiv">
+    <!--    <label for="subTypeLecturers"> Please select lecturers report category:</label>
+        <select class="form-control" name="subTypeLecturers" id="subTypeLecturers">
+            <option selected disabled hidden value=''></option>
             <option value="allLecturers">All lecturers details</option>
             <option value="spaceLecturers">All lecturers per Space</option>
-        </select>
+        </select>-->
     </div>
 
-    <div id="subTypeThreadsDiv">
+    <div class="form-group" id="subTypeThreadsDiv">
         <label for="subTypeThreads"> Please select threads report category:</label>
-        <select name="subTypeThreads" id="subTypeThreads">
+        <select class="form-control" name="subTypeThreads" id="subTypeThreads">
+            <option selected disabled hidden value=''></option>
             <option value="allThreads">All threads</option>
             <option value="spaceThreads">All threads per Space</option>
-            <option value="toMarkThreads">All threads to be marked</option>
-        </select>
 
-    </div>-->
+        <!--    <option value="toMarkThreads">All threads to be marked</option>   -->
+        </select>
+        <div class="form-group" id="threadsPerSpaceDiv">
+            <label for="spacesSelect">Please select the spaces you would to get threads for:</label>
+            <select class="form-control" name="spacesSelect" id="spacesSelect">
+                <option selected disabled hidden value=''></option>
+                {{#each this.spaces}}
+                    <option value="{{moduleID}}">{{name}}</option>
+                {{/each}}
+            </select>
+
+        </div>
+
+    </div>
     <!-- end of report subtype divs-->
     <input class="btn btn-primary" type="Submit" value="Download Report"/>
 </form>
-<!-- Upload report
-<label>need to speak to resources to figure out how they wish to take the file and such</label>
--->
-<!--
-<div>
-    <button onclick="{{getLecturers}}">getLecturers</button>
-    <button onclick="{{getStudents}}">getLecturers</button>
-    <button onclick="{{getThreads}}">getLecturers</button>
-</div>
--->

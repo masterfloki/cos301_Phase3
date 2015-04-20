@@ -3,8 +3,17 @@
 <h2>Resource Constraints</h2>
 <h3>Existing Constraints</h3>
 <div class="container">
+    <script>
+        function tog(id) {
+            $('#edit-' + id).toggle();
+        }
+
+        $(function() {
+            $(".editing").hide();
+        });
+    </script>
     <table class="table" id="resource-constraints">
-        <thead><tr><th>#</th><th>Mime Type</th><th>Size Limit</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>Mime Type</th><th>Size Limit</th><th></th><th></th><th></th></tr></thead>
         <tbody>
         {{#each this.constraints}}
             <tr>
@@ -13,8 +22,24 @@
                 <td>{{this.size_limit}} MB </td>
                 <td><form method="Post" action="removeConstraint">
                     <input type="hidden" name="_id" value="{{this._id}}">
-                    <input type="submit" value="Remove">
-                </form></td></tr>
+                    <input type="submit" class="btn btn-default" value="Remove">
+                </form></td>
+                <td>
+                    <button class="btn btn-default"  type="button" onclick="tog('{{this._id}}')">Toggle Edit</button>
+                    </td><td>
+                    <form method="Post" action="updateConstraint" class="form-inline editing" id="edit-{{this._id}}">
+                        <input type="hidden" name="_id" value="{{this._id}}">
+                        <input required type="hidden" name="mime-type" value="{{this.mime_type}}">
+                        <label for="size-limit" >File Size</label>
+                            <input id="size-limit" min="0" required type="number" name="size-limit" class="form-control" >
+                            <select name="size-unit" id="size-unit" class="form-control">
+                                <option value="1">Bytes</option>
+                                <option value="1024">KB</option>
+                                <option value="1048576">MB</option>
+                            </select>
+
+                            <input type="submit" value="Update" class="btn btn-default">
+                    </form></td></tr>
         {{/each}}
         </tbody>
     </table>

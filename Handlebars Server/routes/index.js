@@ -47,6 +47,8 @@ module.exports = function(database, resources, reporting, status, threads, authe
         });
     };
     registerHbsPartials(__dirname + "/../views/notification-views");
+    registerHbsPartials(__dirname + "/../views/status-views");
+
     registerHbsPartials(__dirname + "/../views/spaces-views");
     var mongoose = database.mongoose;
     var express = require('express');
@@ -138,7 +140,12 @@ module.exports = function(database, resources, reporting, status, threads, authe
         })
     });
 
-    router.get('/blank', function (req, res, nect) {
+    router.get('/contributors', function(req, res, next){
+        console.log("Works");
+        res.render('contribution', {title:'COS301 Team A'});
+    });
+
+    router.get('/blank', function (req, res, next) {
         res.render('blank', {title: "Content Unavailable"});
     });
 
@@ -155,7 +162,7 @@ module.exports = function(database, resources, reporting, status, threads, authe
     /******** Content Routing ****************/
 
     var contentRouter = require('./content');
-    router = contentRouter(router, resources, reporting, status, threads);
+    router = contentRouter(router, database, resources, reporting, status, threads);
 
     /******** Infrastructure Routing **********/
 
